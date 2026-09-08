@@ -1,8 +1,8 @@
-using DeepSeekAI.HarnessBridge.Models;
+using UnityBridge.Models;
 using NUnit.Framework;
 using System;
 
-namespace DeepSeekAI.HarnessBridge.Tests {
+namespace UnityBridge.Tests {
     /// <summary>
     /// Base test fixture for all command tests.
     /// Provides common test infrastructure including response capture and request builders.

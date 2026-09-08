@@ -1,5 +1,5 @@
 #!/bin/bash
-# Harness Unity Bridge - Quick Installer
+# Agents Unity Bridge - Quick Installer
 #
 # Usage:
 #   curl -sSL https://raw.githubusercontent.com/WarrenMondeville/harness-unity-bridge/main/install.sh | bash
@@ -9,7 +9,7 @@
 
 set -e
 
-echo "Installing Harness Unity Bridge..."
+echo "Installing Agents Unity Bridge..."
 echo
 
 # Check Python
@@ -20,13 +20,13 @@ fi
 
 # Install via pip
 echo "Installing pip package..."
-python3 -m pip install --user --upgrade harness-unity-bridge
+python3 -m pip install --user --upgrade agents-unity-bridge
 
 # Get Python user scripts directory
 PYTHON_BIN="$(python3 -m site --user-base)/bin"
 
 # Add to PATH if not already there
-if ! command -v harness-unity-bridge &> /dev/null; then
+if ! command -v agents-unity-bridge &> /dev/null; then
     # Determine shell config file
     if [ -n "$ZSH_VERSION" ] || [ "$SHELL" = "/bin/zsh" ]; then
         SHELL_RC="$HOME/.zshrc"
@@ -40,7 +40,7 @@ if ! command -v harness-unity-bridge &> /dev/null; then
     else
         echo "Adding Python scripts to PATH in $SHELL_RC..."
         echo "" >> "$SHELL_RC"
-        echo "# Added by Harness Unity Bridge installer" >> "$SHELL_RC"
+        echo "# Added by Agents Unity Bridge installer" >> "$SHELL_RC"
         echo "export PATH=\"\$PATH:$PYTHON_BIN\"" >> "$SHELL_RC"
     fi
 
@@ -51,7 +51,7 @@ fi
 # Install skill
 echo
 echo "Installing DeepSeek Harness skill..."
-python3 -m harness_unity_bridge.cli install-skill
+python3 -m agents_unity_bridge.cli install-skill
 
 echo
 echo "Installation complete!"

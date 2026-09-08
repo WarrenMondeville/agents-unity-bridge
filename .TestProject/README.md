@@ -1,6 +1,6 @@
 # Unity Bridge - Integration Test Project
 
-This is a minimal Unity 2021.3+ project used for end-to-end integration testing of the Harness Unity Bridge package.
+This is a minimal Unity 2021.3+ project used for end-to-end integration testing of the Agents Unity Bridge package.
 
 **Note**: This directory is named `.TestProject` (hidden) to prevent it from appearing in the Package Manager when users install this package. It's excluded via `.npmignore` and only used for local development and testing.
 
@@ -21,19 +21,19 @@ The `.TestProject/` directory enables:
 ├── Packages/             # Package dependencies
 │   └── manifest.json    # References parent directory as local package
 ├── ProjectSettings/      # Unity project settings (committed to git)
-├── .harness-unity-bridge/       # Bridge protocol directory (gitignored, created at runtime)
+├── .agents-unity-bridge/       # Bridge protocol directory (gitignored, created at runtime)
 ├── .gitignore           # Ignores everything except ProjectSettings & README
 └── README.md            # This file
 ```
 
 ## Package Reference
 
-The project references the Harness Unity Bridge package via a **local package reference**:
+The project references the Agents Unity Bridge package via a **local package reference**:
 
 ```json
 {
   "dependencies": {
-    "com.deepseekai.harness-unity-bridge": "file:.."
+    "com.agents-unity-bridge": "file:.."
   }
 }
 ```
@@ -61,7 +61,7 @@ Or open via Unity Hub by adding `.TestProject/` as a project.
 Once Unity Editor opens:
 
 1. Check Window > Package Manager
-2. Find "Harness Unity Bridge" in the package list
+2. Find "Agents Unity Bridge" in the package list
 3. Verify it shows as a "Local" package
 4. Check for any console errors related to package loading
 
@@ -107,12 +107,12 @@ python3 scripts/cli.py run-tests --mode EditMode
 
 ### "Unity Editor not detected"
 
-**Cause**: The `.harness-unity-bridge/` directory doesn't exist yet.
+**Cause**: The `.agents-unity-bridge/` directory doesn't exist yet.
 
 **Fix**:
 1. Ensure Unity Editor is open with .TestProject loaded
-2. The package should create `.harness-unity-bridge/` automatically on startup
-3. Check Unity Console for any `[HarnessBridge]` errors
+2. The package should create `.agents-unity-bridge/` automatically on startup
+3. Check Unity Console for any `[AgentsBridge]` errors
 4. Try reopening the project if the directory isn't created
 
 ### Package Not Showing in Package Manager
@@ -120,7 +120,7 @@ python3 scripts/cli.py run-tests --mode EditMode
 **Cause**: The local package reference may not be resolving correctly.
 
 **Fix**:
-1. Check `Packages/manifest.json` contains `"com.deepseekai.harness-unity-bridge": "file:.."`
+1. Check `Packages/manifest.json` contains `"com.agents-unity-bridge": "file:.."`
 2. Verify the parent directory contains a valid `package.json`
 3. Try Window > Package Manager > Refresh
 4. Check Unity Console for package resolution errors
@@ -130,19 +130,19 @@ python3 scripts/cli.py run-tests --mode EditMode
 **Cause**: Unity Bridge isn't polling for commands.
 
 **Fix**:
-1. Check Unity Console for `[HarnessBridge]` initialization messages
+1. Check Unity Console for `[AgentsBridge]` initialization messages
 2. Verify no errors during package initialization
 3. Try restarting Unity Editor
-4. Check if `.harness-unity-bridge/` directory exists and is writable
+4. Check if `.agents-unity-bridge/` directory exists and is writable
 
 ## For AI Agents
 
-When working on the Harness Unity Bridge package:
+When working on the Agents Unity Bridge package:
 
 1. **Before Testing Changes**: Open .TestProject in Unity Editor
 2. **Make Changes**: Edit files in `../Editor/` (changes reflect immediately)
 3. **Validate**: Run Python commands from `skill/` directory
-4. **Check Logs**: Monitor Unity Console for `[HarnessBridge]` messages
+4. **Check Logs**: Monitor Unity Console for `[AgentsBridge]` messages
 5. **Clean Up**: Unity will clean up old response files automatically
 
 ### Typical Workflow
@@ -152,7 +152,7 @@ When working on the Harness Unity Bridge package:
 open -a "Unity" .TestProject/
 
 # 2. Make changes to package C# code
-# Edit files in Editor/Commands/, Editor/HarnessBridge.cs, etc.
+# Edit files in Editor/Commands/, Editor/AgentsBridge.cs, etc.
 
 # 3. Test changes via Python skill script
 cd skill
@@ -174,7 +174,7 @@ Only these files are tracked in git (see `.gitignore`):
 - `.gitignore` - Git ignore rules
 - `README.md` - This file
 
-Everything else (Assets/, Library/, Temp/, Logs/, .harness-unity-bridge/) is gitignored.
+Everything else (Assets/, Library/, Temp/, Logs/, .agents-unity-bridge/) is gitignored.
 
 ## Adding Test Assets (Optional)
 

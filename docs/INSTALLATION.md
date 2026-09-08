@@ -20,26 +20,26 @@ irm https://raw.githubusercontent.com/WarrenMondeville/harness-unity-bridge/main
 ```
 
 Both installers:
-- Install the `harness-unity-bridge` pip package
+- Install the `agents-unity-bridge` pip package
 - Add Python scripts directory to your PATH
 - Install the DeepSeek Harness skill
 
-**Windows Note:** On Windows without Developer Mode, the skill is installed as a directory copy instead of a symlink. This works seamlessly, but updates require re-running `harness-unity-bridge install-skill`.
+**Windows Note:** On Windows without Developer Mode, the skill is installed as a directory copy instead of a symlink. This works seamlessly, but updates require re-running `agents-unity-bridge install-skill`.
 
 ## Manual Install
 
 If you prefer not to use curl, or need more control:
 
 ```bash
-pip install harness-unity-bridge
-harness-unity-bridge install-skill
+pip install agents-unity-bridge
+agents-unity-bridge install-skill
 ```
 
 ## Verify Installation
 
 ```bash
-harness-unity-bridge --help
-harness-unity-bridge health-check
+agents-unity-bridge --help
+agents-unity-bridge health-check
 ```
 
 ## Unity Package
@@ -72,7 +72,7 @@ Add this line to your project's `Packages/manifest.json`:
 ```json
 {
   "dependencies": {
-    "com.deepseekai.harness-unity-bridge": "https://github.com/WarrenMondeville/harness-unity-bridge.git?path=package"
+    "com.agents-unity-bridge": "https://github.com/WarrenMondeville/harness-unity-bridge.git?path=package"
   }
 }
 ```
@@ -83,52 +83,52 @@ Add this line to your project's `Packages/manifest.json`:
 
 ```bash
 # Install the DeepSeek Harness skill
-harness-unity-bridge install-skill
+agents-unity-bridge install-skill
 
 # Uninstall the DeepSeek Harness skill
-harness-unity-bridge uninstall-skill
+agents-unity-bridge uninstall-skill
 
 # Update package and reinstall skill
-harness-unity-bridge update
+agents-unity-bridge update
 ```
 
 The skill is installed to `~/.dsh/skills/unity-bridge/`:
 - **macOS/Linux/Windows with Developer Mode:** Installed as a symlink pointing to the bundled skill files in the pip package (updates automatically with package)
-- **Windows without Developer Mode:** Installed as a directory copy (requires re-running `harness-unity-bridge install-skill` after updates)
+- **Windows without Developer Mode:** Installed as a directory copy (requires re-running `agents-unity-bridge install-skill` after updates)
 
 To enable symlinks on Windows 10/11, enable Developer Mode in Settings > Update & Security > For developers.
 
 ### Unity Commands
 
 ```bash
-harness-unity-bridge run-tests --mode EditMode
-harness-unity-bridge compile
-harness-unity-bridge get-console-logs --limit 10
-harness-unity-bridge get-status
-harness-unity-bridge refresh
-harness-unity-bridge health-check
+agents-unity-bridge run-tests --mode EditMode
+agents-unity-bridge compile
+agents-unity-bridge get-console-logs --limit 10
+agents-unity-bridge get-status
+agents-unity-bridge refresh
+agents-unity-bridge health-check
 ```
 
 ## Updating
 
 ```bash
-harness-unity-bridge update
+agents-unity-bridge update
 ```
 
-This runs `pip install --upgrade harness-unity-bridge` and reinstalls the skill to ensure the symlink points to the updated package.
+This runs `pip install --upgrade agents-unity-bridge` and reinstalls the skill to ensure the symlink points to the updated package.
 
 Or manually:
 
 ```bash
-pip install --upgrade harness-unity-bridge
-harness-unity-bridge install-skill
+pip install --upgrade agents-unity-bridge
+agents-unity-bridge install-skill
 ```
 
 ## Uninstalling
 
 ```bash
-harness-unity-bridge uninstall-skill
-pip uninstall harness-unity-bridge
+agents-unity-bridge uninstall-skill
+pip uninstall agents-unity-bridge
 ```
 
 ## Development Installation
@@ -137,19 +137,19 @@ For contributing to the project:
 
 ```bash
 git clone https://github.com/WarrenMondeville/harness-unity-bridge.git
-cd harness-unity-bridge/skill
+cd agents-unity-bridge/skill
 pip install -e ".[dev]"
-harness-unity-bridge install-skill
+agents-unity-bridge install-skill
 ```
 
 ## Troubleshooting
 
 ### PATH Issues
 
-If `harness-unity-bridge` is not found after pip install, the pip scripts directory may not be in your PATH. You can:
+If `agents-unity-bridge` is not found after pip install, the pip scripts directory may not be in your PATH. You can:
 
 1. Add the pip scripts directory to your PATH
-2. Use the module directly: `python -m harness_unity_bridge.cli install-skill`
+2. Use the module directly: `python -m agents_unity_bridge.cli install-skill`
 
 ### Windows Symlink Permissions
 
@@ -157,13 +157,13 @@ On Windows, creating symlinks requires either:
 - Administrator privileges, or
 - Developer Mode enabled
 
-If you see `[WinError 1314] A required privilege is not held by the client`, the installer will automatically fall back to copying the skill directory. This works perfectly fine, but updates require re-running `harness-unity-bridge install-skill`.
+If you see `[WinError 1314] A required privilege is not held by the client`, the installer will automatically fall back to copying the skill directory. This works perfectly fine, but updates require re-running `agents-unity-bridge install-skill`.
 
 **To enable symlinks (optional):**
 1. Open Settings > Update & Security > For developers
 2. Enable "Developer Mode"
 3. Restart your terminal
-4. Run `harness-unity-bridge install-skill` again
+4. Run `agents-unity-bridge install-skill` again
 
 ### Python Version
 

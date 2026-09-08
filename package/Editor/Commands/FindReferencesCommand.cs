@@ -1,12 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using DeepSeekAI.HarnessBridge.Models;
+using UnityBridge.Models;
 using UnityEditor;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
 
-namespace DeepSeekAI.HarnessBridge.Commands {
+namespace UnityBridge.Commands {
     /// <summary>
     /// Finds the assets that directly reference a given asset (reverse dependency edges).
     /// Unity exposes no reverse index, so this scans all project assets. Read-only.
@@ -31,7 +31,7 @@ namespace DeepSeekAI.HarnessBridge.Commands {
             bool includePackages = AssetAnalysisUtil.TryParseBool(request.@params?.includePackages, false);
 
 #if DEBUG
-            Debug.Log($"{HarnessBridge.LogPrefix} find-references: {asset} (includePackages: {includePackages})");
+            Debug.Log($"{AgentsBridge.LogPrefix} find-references: {asset} (includePackages: {includePackages})");
 #endif
 
             try {
@@ -83,7 +83,7 @@ namespace DeepSeekAI.HarnessBridge.Commands {
             }
             catch (Exception e) {
                 stopwatch.Stop();
-                Debug.LogError($"{HarnessBridge.LogPrefix} find-references failed: {e.Message}");
+                Debug.LogError($"{AgentsBridge.LogPrefix} find-references failed: {e.Message}");
                 onComplete?.Invoke(CommandResponse.Error(request.id, request.action, e.Message));
             }
         }

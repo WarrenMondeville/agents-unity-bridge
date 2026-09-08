@@ -1,4 +1,4 @@
-namespace DeepSeekAI.HarnessBridge.Commands {
+namespace UnityBridge.Commands {
     public interface IEditorPlayMode {
         bool IsPlaying { get; set; }
         bool IsPaused { get; set; }

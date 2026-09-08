@@ -2,14 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using DeepSeekAI.HarnessBridge.Models;
+using UnityBridge.Models;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Debug = UnityEngine.Debug;
 
-namespace DeepSeekAI.HarnessBridge.Commands {
+namespace UnityBridge.Commands {
     /// <summary>
     /// Manages Unity prefabs: inspect metadata, dump the hierarchy, and create a
     /// prefab asset from a scene GameObject. Uses Unity's PrefabUtility directly.
@@ -21,7 +21,7 @@ namespace DeepSeekAI.HarnessBridge.Commands {
             var action = (request.@params?.prefabAction ?? string.Empty).ToLowerInvariant();
 
 #if DEBUG
-            Debug.Log($"{HarnessBridge.LogPrefix} manage-prefabs: {action}");
+            Debug.Log($"{AgentsBridge.LogPrefix} manage-prefabs: {action}");
 #endif
 
             try {
@@ -44,7 +44,7 @@ namespace DeepSeekAI.HarnessBridge.Commands {
             }
             catch (Exception e) {
                 stopwatch.Stop();
-                Debug.LogError($"{HarnessBridge.LogPrefix} manage-prefabs '{action}' failed: {e.Message}");
+                Debug.LogError($"{AgentsBridge.LogPrefix} manage-prefabs '{action}' failed: {e.Message}");
                 onComplete?.Invoke(CommandResponse.Error(request.id, request.action, e.Message));
             }
         }

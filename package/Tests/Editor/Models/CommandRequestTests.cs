@@ -1,8 +1,8 @@
-using DeepSeekAI.HarnessBridge.Models;
+using UnityBridge.Models;
 using NUnit.Framework;
 using UnityEngine;
 
-namespace DeepSeekAI.HarnessBridge.Tests.Models {
+namespace UnityBridge.Tests.Models {
     /// <summary>
     /// Tests for CommandRequest serialization/deserialization.
     /// Focus: Verify JSON serialization works correctly for file-based protocol

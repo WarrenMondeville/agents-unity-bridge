@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
-using DeepSeekAI.HarnessBridge.Models;
+using UnityBridge.Models;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Debug = UnityEngine.Debug;
 
-namespace DeepSeekAI.HarnessBridge.Commands {
+namespace UnityBridge.Commands {
     /// <summary>
     /// Dumps Inspector-visible serialized field values of a Unity asset (prefab, asset,
     /// or scene) into a structured hierarchy. Uses SerializedObject / SerializedProperty,
@@ -31,7 +31,7 @@ namespace DeepSeekAI.HarnessBridge.Commands {
             string ext = Path.GetExtension(asset).ToLowerInvariant();
 
 #if DEBUG
-            Debug.Log($"{HarnessBridge.LogPrefix} dump-asset: {asset}");
+            Debug.Log($"{AgentsBridge.LogPrefix} dump-asset: {asset}");
 #endif
 
             try {
@@ -60,7 +60,7 @@ namespace DeepSeekAI.HarnessBridge.Commands {
             }
             catch (Exception e) {
                 stopwatch.Stop();
-                Debug.LogError($"{HarnessBridge.LogPrefix} dump-asset failed: {e.Message}");
+                Debug.LogError($"{AgentsBridge.LogPrefix} dump-asset failed: {e.Message}");
                 onComplete?.Invoke(CommandResponse.Error(request.id, request.action, e.Message));
             }
         }

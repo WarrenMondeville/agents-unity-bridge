@@ -1,16 +1,16 @@
 using System;
 using System.Diagnostics;
-using DeepSeekAI.HarnessBridge.Models;
+using UnityBridge.Models;
 using UnityEditor;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
 
-namespace DeepSeekAI.HarnessBridge.Commands {
+namespace UnityBridge.Commands {
     public class GetStatusCommand : ICommand {
         public void Execute(CommandRequest request, Action<CommandResponse> onProgress, Action<CommandResponse> onComplete) {
             var stopwatch = Stopwatch.StartNew();
 #if DEBUG
-            Debug.Log(HarnessBridge.LogPrefix + " Getting editor status");
+            Debug.Log(AgentsBridge.LogPrefix + " Getting editor status");
 #endif
 
             // Use the proper EditorStatus model instead of overloading the error field

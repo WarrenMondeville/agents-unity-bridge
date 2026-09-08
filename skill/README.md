@@ -1,7 +1,7 @@
-# Harness Unity Bridge
+# Agents Unity Bridge
 
 [![PyPI](https://img.shields.io/pypi/v/harness-unity-bridge)](https://pypi.org/project/harness-unity-bridge/)
-[![Python 3.8+](https://img.shields.io/pypi/pyversions/harness-unity-bridge)](https://pypi.org/project/harness-unity-bridge/)
+[![Python 3.8+](https://img.shields.io/pypi/pyversions/agents-unity-bridge)](https://pypi.org/project/harness-unity-bridge/)
 [![CI](https://github.com/WarrenMondeville/harness-unity-bridge/actions/workflows/test-skill.yml/badge.svg)](https://github.com/WarrenMondeville/harness-unity-bridge/actions/workflows/test-skill.yml)
 [![codecov](https://codecov.io/gh/WarrenMondeville/harness-unity-bridge/graph/badge.svg?token=3PHF2GXHON)](https://codecov.io/gh/WarrenMondeville/harness-unity-bridge)
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://github.com/WarrenMondeville/harness-unity-bridge/blob/main/LICENSE)
@@ -10,11 +10,11 @@
 
 > File-based bridge enabling DeepSeek Harness to control Unity Editor operations in a running editor instance.
 
-## Why Harness Unity Bridge?
+## Why Agents Unity Bridge?
 
 - **Zero config** — No network setup, no port conflicts. Just install and go.
 - **Deterministic CLI** — Tested Python script handles UUIDs, polling, retries, and cleanup so DeepSeek Harness doesn't have to.
-- **Multi-project** — Each Unity project gets its own `.harness-unity-bridge/` directory. Work on multiple projects simultaneously.
+- **Multi-project** — Each Unity project gets its own `.agents-unity-bridge/` directory. Work on multiple projects simultaneously.
 - **Full editor control** — Run tests, compile, check logs, refresh assets, build, and control Play Mode.
 - **Cross-platform** — macOS, Linux, and Windows support.
 
@@ -23,8 +23,8 @@
 **Install the CLI:**
 
 ```bash
-pip install harness-unity-bridge
-harness-unity-bridge install-skill
+pip install agents-unity-bridge
+agents-unity-bridge install-skill
 ```
 
 Or use the one-line installer:
@@ -59,11 +59,11 @@ Open DeepSeek Harness in your Unity project directory and ask naturally:
 Or use the CLI directly:
 
 ```bash
-harness-unity-bridge run-tests --mode EditMode
-harness-unity-bridge compile
-harness-unity-bridge get-console-logs --limit 10
-harness-unity-bridge get-status
-harness-unity-bridge build --target Android
+agents-unity-bridge run-tests --mode EditMode
+agents-unity-bridge compile
+agents-unity-bridge get-console-logs --limit 10
+agents-unity-bridge get-status
+agents-unity-bridge build --target Android
 ```
 
 ## Commands
@@ -81,14 +81,14 @@ harness-unity-bridge build --target Android
 ## How It Works
 
 ```
-DeepSeek Harness  -->  harness-unity-bridge CLI  -->  .harness-unity-bridge/command.json
+DeepSeek Harness  -->  agents-unity-bridge CLI  -->  .agents-unity-bridge/command.json
                                                   |
                                             Unity Editor
                                                   |
-DeepSeek Harness  <--  harness-unity-bridge CLI  <--  .harness-unity-bridge/response-{id}.json
+DeepSeek Harness  <--  agents-unity-bridge CLI  <--  .agents-unity-bridge/response-{id}.json
 ```
 
-1. DeepSeek Harness (or you) runs a `harness-unity-bridge` command
+1. DeepSeek Harness (or you) runs a `agents-unity-bridge` command
 2. The CLI writes a JSON command with a unique UUID
 3. Unity Editor polls for and executes the command
 4. The CLI polls for the response with exponential backoff
@@ -99,7 +99,7 @@ All file I/O is atomic (temp file + rename) to prevent corruption. The CLI handl
 ## Updating
 
 ```bash
-harness-unity-bridge update
+agents-unity-bridge update
 ```
 
 ## Documentation

@@ -1,8 +1,8 @@
 {
-    "name": "DeepSeekAI.HarnessBridge.Tests.Editor",
-    "rootNamespace": "DeepSeekAI.HarnessBridge.Tests",
+    "name": "UnityBridge.Tests.Editor",
+    "rootNamespace": "UnityBridge.Tests",
     "references": [
-        "DeepSeekAI.HarnessBridge",
+        "UnityBridge",
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner"
     ],

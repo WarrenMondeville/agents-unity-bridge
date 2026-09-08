@@ -3,17 +3,17 @@ requires = ["setuptools>=82.0.1,<83", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "harness-unity-bridge"
-version = "0.6.0"
-description = "Control Unity Editor from DeepSeek Harness — run tests, compile, get logs, build, and more via a file-based bridge"
+name = "agents-unity-bridge"
+version = "0.7.0"
+description = "Control Unity Editor from AI agents — run tests, compile, get logs, build, and more via a file-based bridge"
 readme = "README.md"
 license = {text = "Apache-2.0"}
 requires-python = ">=3.9"
 keywords = [
     "unity",
-    "deepseek",
-    "deepseek-harness",
-    "harness",
+    "agent",
+    "ai",
+    "agents",
     "game-development",
     "unity-editor",
     "automation",
@@ -46,7 +46,7 @@ Changelog = "https://github.com/WarrenMondeville/harness-unity-bridge/releases"
 PyPI = "https://pypi.org/project/harness-unity-bridge/"
 
 [project.scripts]
-harness-unity-bridge = "harness_unity_bridge.cli:main"
+agents-unity-bridge = "agents_unity_bridge.cli:main"
 
 [project.optional-dependencies]
 dev = ["pytest>=7.0", "pytest-cov>=4.0", "black>=23.0", "flake8>=6.0"]
@@ -58,4 +58,4 @@ where = ["src"]
 pythonpath = ["src"]
 
 [tool.setuptools.package-data]
-harness_unity_bridge = ["skill/*.md", "skill/references/*.md"]
+agents_unity_bridge = ["skill/*.md", "skill/references/*.md"]

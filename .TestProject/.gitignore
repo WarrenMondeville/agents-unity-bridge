@@ -29,5 +29,5 @@ ProjectSettings/*.meta
 Builds/
 Assets/Scenes/
 
-# .harness-unity-bridge/ is created at runtime by Unity Bridge - always ignore
-.harness-unity-bridge/
+# .agents-unity-bridge/ is created at runtime by Unity Bridge - always ignore
+.agents-unity-bridge/

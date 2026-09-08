@@ -1,12 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using DeepSeekAI.HarnessBridge.Models;
+using UnityBridge.Models;
 using UnityEditor;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
 
-namespace DeepSeekAI.HarnessBridge.Commands {
+namespace UnityBridge.Commands {
     /// <summary>
     /// Searches the asset database by name (and optional type filter) and returns the
     /// matching asset paths. Read-only.
@@ -34,7 +34,7 @@ namespace DeepSeekAI.HarnessBridge.Commands {
             }
 
 #if DEBUG
-            Debug.Log($"{HarnessBridge.LogPrefix} search-assets: '{filter}' (limit: {limit})");
+            Debug.Log($"{AgentsBridge.LogPrefix} search-assets: '{filter}' (limit: {limit})");
 #endif
 
             try {
@@ -68,7 +68,7 @@ namespace DeepSeekAI.HarnessBridge.Commands {
             }
             catch (Exception e) {
                 stopwatch.Stop();
-                Debug.LogError($"{HarnessBridge.LogPrefix} search-assets failed: {e.Message}");
+                Debug.LogError($"{AgentsBridge.LogPrefix} search-assets failed: {e.Message}");
                 onComplete?.Invoke(CommandResponse.Error(request.id, request.action, e.Message));
             }
         }

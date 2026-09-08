@@ -2,15 +2,15 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
-using DeepSeekAI.HarnessBridge.Commands;
-using DeepSeekAI.HarnessBridge.Models;
+using UnityBridge.Commands;
+using UnityBridge.Models;
 using UnityEditor;
 using UnityEngine;
 
-namespace DeepSeekAI.HarnessBridge {
+namespace UnityBridge {
     [InitializeOnLoad]
-    public static class HarnessBridge {
-        public const string LogPrefix = "[HarnessBridge]";
+    public static class AgentsBridge {
+        public const string LogPrefix = "[AgentsBridge]";
 
         private static readonly string CommandDir;
         private static readonly string CommandFilePath;
@@ -39,8 +39,8 @@ namespace DeepSeekAI.HarnessBridge {
             "dump-asset"
         };
 
-        static HarnessBridge() {
-            CommandDir = Path.Combine(Application.dataPath, "..", ".harness-unity-bridge");
+        static AgentsBridge() {
+            CommandDir = Path.Combine(Application.dataPath, "..", ".agents-unity-bridge");
             CommandFilePath = Path.Combine(CommandDir, "command.json");
 
             var playMode = new EditorPlayMode();
@@ -287,7 +287,7 @@ namespace DeepSeekAI.HarnessBridge {
         }
 
         // Cleanup utility - can be called from menu
-        [MenuItem("Tools/DeepSeek Harness Bridge/Cleanup Old Responses")]
+        [MenuItem("Tools/Unity Bridge/Cleanup Old Responses")]
         private static void CleanupOldResponses() {
             if (!Directory.Exists(CommandDir)) return;
 
@@ -308,7 +308,7 @@ namespace DeepSeekAI.HarnessBridge {
             }
         }
 
-        [MenuItem("Tools/DeepSeek Harness Bridge/Reset Processing State")]
+        [MenuItem("Tools/Unity Bridge/Reset Processing State")]
         private static void ResetProcessingStateMenu() {
             if (_isProcessingCommand) {
                 Debug.Log($"{LogPrefix} Manually resetting processing state (was processing: {_currentCommandId})");
@@ -318,7 +318,7 @@ namespace DeepSeekAI.HarnessBridge {
             }
         }
 
-        [MenuItem("Tools/DeepSeek Harness Bridge/Show Status")]
+        [MenuItem("Tools/Unity Bridge/Show Status")]
         private static void ShowStatus() {
             Debug.Log($"{LogPrefix} Status:");
             Debug.Log($"  Command directory: {CommandDir}");

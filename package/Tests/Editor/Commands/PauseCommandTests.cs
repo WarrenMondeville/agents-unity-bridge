@@ -1,9 +1,9 @@
-using DeepSeekAI.HarnessBridge.Commands;
-using DeepSeekAI.HarnessBridge.Models;
-using DeepSeekAI.HarnessBridge.Tests.TestHelpers;
+using UnityBridge.Commands;
+using UnityBridge.Models;
+using UnityBridge.Tests.TestHelpers;
 using NUnit.Framework;
 
-namespace DeepSeekAI.HarnessBridge.Tests.Commands {
+namespace UnityBridge.Tests.Commands {
     /// <summary>
     /// Tests for PauseCommand using a hand-written FakeEditorPlayMode (no Moq dependency).
     /// Focus: Precondition check (must be playing), toggle behavior, response construction.

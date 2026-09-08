@@ -2,12 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using DeepSeekAI.HarnessBridge.Models;
+using UnityBridge.Models;
 using UnityEditor;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
 
-namespace DeepSeekAI.HarnessBridge.Commands {
+namespace UnityBridge.Commands {
     /// <summary>
     /// Lists the assets that a given asset depends on (forward dependency edges).
     /// Read-only: safe to run while Unity is compiling.
@@ -32,7 +32,7 @@ namespace DeepSeekAI.HarnessBridge.Commands {
             bool recursive = AssetAnalysisUtil.TryParseBool(request.@params?.recursive, false);
 
 #if DEBUG
-            Debug.Log($"{HarnessBridge.LogPrefix} get-dependencies: {asset} (recursive: {recursive})");
+            Debug.Log($"{AgentsBridge.LogPrefix} get-dependencies: {asset} (recursive: {recursive})");
 #endif
 
             try {
@@ -58,7 +58,7 @@ namespace DeepSeekAI.HarnessBridge.Commands {
             }
             catch (Exception e) {
                 stopwatch.Stop();
-                Debug.LogError($"{HarnessBridge.LogPrefix} get-dependencies failed: {e.Message}");
+                Debug.LogError($"{AgentsBridge.LogPrefix} get-dependencies failed: {e.Message}");
                 onComplete?.Invoke(CommandResponse.Error(request.id, request.action, e.Message));
             }
         }

@@ -1,10 +1,10 @@
 using System;
 using System.Diagnostics;
-using DeepSeekAI.HarnessBridge.Models;
+using UnityBridge.Models;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
 
-namespace DeepSeekAI.HarnessBridge.Commands {
+namespace UnityBridge.Commands {
     public class PauseCommand : ICommand {
         private readonly IEditorPlayMode _editor;
 
@@ -27,7 +27,7 @@ namespace DeepSeekAI.HarnessBridge.Commands {
                 stopwatch.Stop();
 
 #if DEBUG
-                Debug.Log($"{HarnessBridge.LogPrefix} Pause toggled: isPaused={_editor.IsPaused}");
+                Debug.Log($"{AgentsBridge.LogPrefix} Pause toggled: isPaused={_editor.IsPaused}");
 #endif
 
                 var response = CommandResponse.Success(request.id, request.action, stopwatch.ElapsedMilliseconds);
@@ -41,7 +41,7 @@ namespace DeepSeekAI.HarnessBridge.Commands {
             }
             catch (Exception e) {
                 stopwatch.Stop();
-                Debug.LogError($"{HarnessBridge.LogPrefix} Pause toggle failed: {e.Message}");
+                Debug.LogError($"{AgentsBridge.LogPrefix} Pause toggle failed: {e.Message}");
                 onComplete?.Invoke(CommandResponse.Error(request.id, request.action, e.Message));
             }
         }

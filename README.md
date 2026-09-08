@@ -1,4 +1,4 @@
-#  Harness Unity Bridge
+#  Agents Unity Bridge
 
 [English](README.md) | [中文](README.zh.md)
 
@@ -65,29 +65,29 @@ Open DeepSeek Harness in your Unity project directory:
 Or use the CLI directly:
 
 ```bash
-harness-unity-bridge run-tests --mode EditMode
-harness-unity-bridge compile
-harness-unity-bridge get-console-logs --limit 10
+agents-unity-bridge run-tests --mode EditMode
+agents-unity-bridge compile
+agents-unity-bridge get-console-logs --limit 10
 ```
 
 ### Updating
 
 ```bash
-harness-unity-bridge update
+agents-unity-bridge update
 ```
 
 ## ⚙️ How It Works
 
 ```
-DeepSeek Harness → harness-unity-bridge CLI → .harness-unity-bridge/command.json → Unity Editor → response.json
+DeepSeek Harness → agents-unity-bridge CLI → .agents-unity-bridge/command.json → Unity Editor → response.json
 ```
 
-1. DeepSeek Harness (or you) runs `harness-unity-bridge` commands
-2. The CLI writes commands to `.harness-unity-bridge/command.json`
+1. DeepSeek Harness (or you) runs `agents-unity-bridge` commands
+2. The CLI writes commands to `.agents-unity-bridge/command.json`
 3. Unity Editor polls and executes commands
-4. Results appear in `.harness-unity-bridge/response-{id}.json`
+4. Results appear in `.agents-unity-bridge/response-{id}.json`
 
-Each Unity project has its own `.harness-unity-bridge/` directory, enabling multi-project support.
+Each Unity project has its own `.agents-unity-bridge/` directory, enabling multi-project support.
 
 ## 📚 Documentation
 

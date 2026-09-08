@@ -1,8 +1,8 @@
-# Agent Guidelines for Harness Unity Bridge
+# Agent Guidelines for Agents Unity Bridge
 
 ## Project Overview
 
-This is a Unity package (`com.deepseekai.harness-unity-bridge`) that enables DeepSeek Harness to control Unity Editor operations via a file-based protocol. The package has two components:
+This is a Unity package (`com.agents-unity-bridge`) that enables DeepSeek Harness to control Unity Editor operations via a file-based protocol. The package has two components:
 
 1. **Unity Package** - C# code that runs in Unity Editor, polls for commands, executes them
 2. **DeepSeek Harness Skill** - Python script + documentation that DeepSeek Harness uses to send commands
@@ -13,14 +13,14 @@ This is a Unity package (`com.deepseekai.harness-unity-bridge`) that enables Dee
 
 ### Unity Package (package/)
 - `Editor/` - C# command implementations for Unity
-  - `HarnessBridge.cs` - Main coordinator, command dispatcher
+  - `AgentsBridge.cs` - Main coordinator, command dispatcher
   - `Commands/` - Individual command implementations (ICommand interface)
   - `Models/` - Request/Response data structures
 - `Documentation/` - Package documentation
 - `README.md` - Package documentation and protocol specification
 
 ### DeepSeek Harness Skill (skill/)
-- `src/harness_unity_bridge/cli.py` - **THE CORE** - Handles all command execution
+- `src/agents_unity_bridge/cli.py` - **THE CORE** - Handles all command execution
 - `SKILL.md` - Main documentation with YAML frontmatter
 - `references/` - Extended documentation
   - `COMMANDS.md` - Complete command reference
@@ -58,30 +58,30 @@ cd skill
 pytest tests/test_cli.py -v
 
 # Run with coverage
-pytest tests/test_cli.py --cov=src/harness_unity_bridge --cov-report=term-missing
+pytest tests/test_cli.py --cov=src/agents_unity_bridge --cov-report=term-missing
 
 # Test script help
-python3 src/harness_unity_bridge/cli.py --help
+python3 src/agents_unity_bridge/cli.py --help
 ```
 
 ### Testing with Unity
 ```bash
 # These require Unity Editor to be running
-python3 skill/src/harness_unity_bridge/cli.py get-status
-python3 skill/src/harness_unity_bridge/cli.py compile
-python3 skill/src/harness_unity_bridge/cli.py run-tests --mode EditMode
-python3 skill/src/harness_unity_bridge/cli.py get-console-logs --limit 10 --filter Error
-python3 skill/src/harness_unity_bridge/cli.py refresh
-python3 skill/src/harness_unity_bridge/cli.py get-dependencies --asset Assets/Foo.prefab --recursive
-python3 skill/src/harness_unity_bridge/cli.py find-references --asset Assets/Foo.mat
-python3 skill/src/harness_unity_bridge/cli.py find-unused-assets
-python3 skill/src/harness_unity_bridge/cli.py trace-path --from Assets/A.prefab --to Assets/D.fbx
-python3 skill/src/harness_unity_bridge/cli.py search-assets --query "Player" --type Prefab
-python3 skill/src/harness_unity_bridge/cli.py get-asset-info --asset Assets/Foo.prefab
-python3 skill/src/harness_unity_bridge/cli.py manage-prefabs --action get-info --prefab-path Assets/Prefabs/Foo.prefab
-python3 skill/src/harness_unity_bridge/cli.py manage-prefabs --action get-hierarchy --prefab-path Assets/Prefabs/Foo.prefab
-python3 skill/src/harness_unity_bridge/cli.py manage-prefabs --action create --object MyObj --prefab-path Assets/Prefabs/Foo.prefab
-python3 skill/src/harness_unity_bridge/cli.py dump-asset --asset Assets/Prefabs/Foo.prefab
+python3 skill/src/agents_unity_bridge/cli.py get-status
+python3 skill/src/agents_unity_bridge/cli.py compile
+python3 skill/src/agents_unity_bridge/cli.py run-tests --mode EditMode
+python3 skill/src/agents_unity_bridge/cli.py get-console-logs --limit 10 --filter Error
+python3 skill/src/agents_unity_bridge/cli.py refresh
+python3 skill/src/agents_unity_bridge/cli.py get-dependencies --asset Assets/Foo.prefab --recursive
+python3 skill/src/agents_unity_bridge/cli.py find-references --asset Assets/Foo.mat
+python3 skill/src/agents_unity_bridge/cli.py find-unused-assets
+python3 skill/src/agents_unity_bridge/cli.py trace-path --from Assets/A.prefab --to Assets/D.fbx
+python3 skill/src/agents_unity_bridge/cli.py search-assets --query "Player" --type Prefab
+python3 skill/src/agents_unity_bridge/cli.py get-asset-info --asset Assets/Foo.prefab
+python3 skill/src/agents_unity_bridge/cli.py manage-prefabs --action get-info --prefab-path Assets/Prefabs/Foo.prefab
+python3 skill/src/agents_unity_bridge/cli.py manage-prefabs --action get-hierarchy --prefab-path Assets/Prefabs/Foo.prefab
+python3 skill/src/agents_unity_bridge/cli.py manage-prefabs --action create --object MyObj --prefab-path Assets/Prefabs/Foo.prefab
+python3 skill/src/agents_unity_bridge/cli.py dump-asset --asset Assets/Prefabs/Foo.prefab
 ```
 
 ### Git Workflow
@@ -90,7 +90,7 @@ python3 skill/src/harness_unity_bridge/cli.py dump-asset --asset Assets/Prefabs/
 git status
 
 # Typical commit structure for features
-git add skill/src/harness_unity_bridge/*.py          # Core implementation
+git add skill/src/agents_unity_bridge/*.py          # Core implementation
 git commit -m "feat: Add feature"
 
 git add skill/*.md skill/references/ README.md  # Documentation
@@ -102,7 +102,7 @@ git commit -m "test: Add tests and CI"
 
 ## Coding Style
 
-### Python (skill/src/harness_unity_bridge/cli.py)
+### Python (skill/src/agents_unity_bridge/cli.py)
 - PEP 8 compliant
 - 100-character line limit
 - Type hints where helpful
@@ -115,9 +115,9 @@ git commit -m "test: Add tests and CI"
 - Public members: `PascalCase`
 - Private fields: `_camelCase` with underscore prefix
 - Interfaces: `ICommand`, `ICallbacks`
-- Namespaces: `DeepSeekAI.HarnessBridge.*`
+- Namespaces: `UnityBridge.*`
 - Use `[Serializable]` for data models
-- Always log with `[HarnessBridge]` prefix
+- Always log with `[AgentsBridge]` prefix
 
 ### Markdown
 - Use GitHub-flavored markdown
@@ -144,7 +144,7 @@ git commit -m "test: Add tests and CI"
   - Focus on state transitions, error handling, response construction
   - Avoid testing that mocks return what you set up
 - **Test Infrastructure**:
-  - `Tests/Editor/DeepSeekAI.HarnessBridge.Tests.Editor.asmdef` - Test assembly definition
+  - `Tests/Editor/UnityBridge.Tests.Editor.asmdef` - Test assembly definition
   - `Tests/Editor/TestHelpers/CommandTestFixture.cs` - Base class for command tests
   - `Tests/Editor/TestHelpers/ResponseCapture.cs` - Utility to capture callbacks
 - **Phased Rollout** (matching Python suite quality - 22 tests, 95% coverage):
@@ -152,7 +152,7 @@ git commit -m "test: Add tests and CI"
   - ✅ Phase 2: RefreshCommand (7 tests) + model tests (11 tests) - COMPLETE
   - ✅ Phase 3: CompileCommand async tests (9 tests) - COMPLETE
   - ✅ Phase 4: RunTestsCommand (17 tests) + GetConsoleLogsCommand (16 tests) - COMPLETE
-  - ⏳ Phase 5: HarnessBridge dispatcher tests (~15 tests)
+  - ⏳ Phase 5: AgentsBridge dispatcher tests (~15 tests)
   - ⏳ Phase 6: CI/CD integration (deferred - licensing discussion needed)
 
 ### Test-Driven Development
@@ -160,7 +160,7 @@ When modifying `cli.py`:
 1. Write/update pytest tests first
 2. Implement changes
 3. Run `pytest tests/test_cli.py -v`
-4. Check coverage: `pytest --cov=src/harness_unity_bridge`
+4. Check coverage: `pytest --cov=src/agents_unity_bridge`
 5. All tests must pass before committing
 
 ## Critical Guidelines
@@ -228,24 +228,24 @@ When modifying `cli.py`:
 ## File-Based Protocol (Critical Understanding)
 
 ### How It Works
-1. **Python script** writes `UUID + action + params` to `.harness-unity-bridge/command.json`
+1. **Python script** writes `UUID + action + params` to `.agents-unity-bridge/command.json`
 2. **Unity Editor** polls for `command.json` via `EditorApplication.update`
 3. **Unity** deletes command file, executes command
-4. **Unity** writes result to `.harness-unity-bridge/response-{UUID}.json`
+4. **Unity** writes result to `.agents-unity-bridge/response-{UUID}.json`
 5. **Python script** polls for response file with exponential backoff
 6. **Python script** reads response, formats output, deletes response file
 
 ### Why File-Based?
 - No network configuration needed
 - No port conflicts
-- Multi-project support (each project has own `.harness-unity-bridge/` dir)
+- Multi-project support (each project has own `.agents-unity-bridge/` dir)
 - Works across firewalls
 - Simple debugging (just inspect JSON files)
 
 ### File Location Rules
-- **Per-Project**: `.harness-unity-bridge/` at Unity project root
+- **Per-Project**: `.agents-unity-bridge/` at Unity project root
 - **Not Global**: Each Unity project has its own directory
-- **Gitignored**: `.harness-unity-bridge/` should be in `.gitignore`
+- **Gitignored**: `.agents-unity-bridge/` should be in `.gitignore`
 - **Cleanup**: Old responses cleaned up automatically (1 hour max age)
 
 ## Extending with Custom Commands
@@ -269,7 +269,7 @@ When modifying `cli.py`:
    }
    ```
 
-2. **Register in HarnessBridge.cs**:
+2. **Register in AgentsBridge.cs**:
    ```csharp
    Commands = new Dictionary<string, ICommand> {
        // ... existing commands
@@ -279,7 +279,7 @@ When modifying `cli.py`:
 
 3. **Test with Python script**:
    ```bash
-   python3 skill/src/harness_unity_bridge/cli.py your-command
+   python3 skill/src/agents_unity_bridge/cli.py your-command
    ```
 
 4. **Optional: Add Python Formatter** in `cli.py`:
@@ -342,12 +342,12 @@ test: Add pytest tests for scene validation
    ```bash
    # Create Editor/Commands/YourCommand.cs
    # Implement ICommand interface
-   # Register in HarnessBridge.cs
+   # Register in AgentsBridge.cs
    ```
 
 2. **Add Python formatter (optional)**
    ```bash
-   # Edit skill/src/harness_unity_bridge/cli.py
+   # Edit skill/src/agents_unity_bridge/cli.py
    # Add format_your_command() function
    # Update format_response() dispatch
    ```
@@ -368,7 +368,7 @@ test: Add pytest tests for scene validation
 
 5. **Commit in logical chunks**
    ```bash
-   git add Editor/ skill/src/harness_unity_bridge/
+   git add Editor/ skill/src/agents_unity_bridge/
    git commit -m "feat: Add your-command implementation"
 
    git add skill/*.md skill/references/ README.md
@@ -382,24 +382,24 @@ test: Add pytest tests for scene validation
 
 1. **Check Unity is running**
    ```bash
-   python3 skill/src/harness_unity_bridge/cli.py get-status --verbose
+   python3 skill/src/agents_unity_bridge/cli.py get-status --verbose
    ```
 
 2. **Inspect command/response files**
    ```bash
-   ls -la .harness-unity-bridge/
-   cat .harness-unity-bridge/command.json
-   cat .harness-unity-bridge/response-*.json
+   ls -la .agents-unity-bridge/
+   cat .agents-unity-bridge/command.json
+   cat .agents-unity-bridge/response-*.json
    ```
 
 3. **Check Unity Console**
-   - Look for `[HarnessBridge]` log messages
+   - Look for `[AgentsBridge]` log messages
    - Command processing logged on pickup
    - Errors logged with details
 
 4. **Test with timeout and verbose**
    ```bash
-   python3 skill/src/harness_unity_bridge/cli.py compile --timeout 60 --verbose
+   python3 skill/src/agents_unity_bridge/cli.py compile --timeout 60 --verbose
    ```
 
 ## Architecture Patterns
@@ -447,7 +447,7 @@ test: Add pytest tests for scene validation
 ## Security & Safety
 
 ### File System Safety
-- Only write to `.harness-unity-bridge/` directory
+- Only write to `.agents-unity-bridge/` directory
 - Use atomic writes (temp file + replace)
 - Handle file locking gracefully
 - Clean up old files automatically
@@ -467,7 +467,7 @@ test: Add pytest tests for scene validation
 ## Troubleshooting Guide
 
 ### "Unity Editor not detected"
-**Cause**: `.harness-unity-bridge/` directory doesn't exist
+**Cause**: `.agents-unity-bridge/` directory doesn't exist
 **Fix**: Ensure Unity Editor is open with project loaded and package installed
 
 ### "Command timed out after 30s"
@@ -537,7 +537,7 @@ The Unity package now has comprehensive test coverage:
 - Mock implementations for Unity Test Runner APIs
 
 **Remaining Phases:**
-- Phase 5: HarnessBridge dispatcher with file system mocking
+- Phase 5: AgentsBridge dispatcher with file system mocking
 - Phase 6: CI/CD integration (requires Unity license strategy discussion)
 
 **Testing Philosophy:**
@@ -562,33 +562,33 @@ The Unity package now has comprehensive test coverage:
 ### Most Common Commands
 ```bash
 # Get Unity status
-python3 skill/src/harness_unity_bridge/cli.py get-status
+python3 skill/src/agents_unity_bridge/cli.py get-status
 
 # Run EditMode tests
-python3 skill/src/harness_unity_bridge/cli.py run-tests --mode EditMode
+python3 skill/src/agents_unity_bridge/cli.py run-tests --mode EditMode
 
 # Check for errors
-python3 skill/src/harness_unity_bridge/cli.py get-console-logs --filter Error
+python3 skill/src/agents_unity_bridge/cli.py get-console-logs --filter Error
 
 # Asset dependency analysis
-python3 skill/src/harness_unity_bridge/cli.py get-dependencies --asset Assets/Foo.prefab --recursive
-python3 skill/src/harness_unity_bridge/cli.py find-references --asset Assets/Foo.mat
-python3 skill/src/harness_unity_bridge/cli.py find-unused-assets
+python3 skill/src/agents_unity_bridge/cli.py get-dependencies --asset Assets/Foo.prefab --recursive
+python3 skill/src/agents_unity_bridge/cli.py find-references --asset Assets/Foo.mat
+python3 skill/src/agents_unity_bridge/cli.py find-unused-assets
 
 # Prefab management
-python3 skill/src/harness_unity_bridge/cli.py manage-prefabs --action get-info --prefab-path Assets/Prefabs/Foo.prefab
-python3 skill/src/harness_unity_bridge/cli.py manage-prefabs --action create --object MyObj --prefab-path Assets/Prefabs/Foo.prefab
+python3 skill/src/agents_unity_bridge/cli.py manage-prefabs --action get-info --prefab-path Assets/Prefabs/Foo.prefab
+python3 skill/src/agents_unity_bridge/cli.py manage-prefabs --action create --object MyObj --prefab-path Assets/Prefabs/Foo.prefab
 
 # Asset inspector dump
-python3 skill/src/harness_unity_bridge/cli.py dump-asset --asset Assets/Prefabs/Foo.prefab
+python3 skill/src/agents_unity_bridge/cli.py dump-asset --asset Assets/Prefabs/Foo.prefab
 
 # Test Python script
 cd skill && pytest tests/test_cli.py -v
 ```
 
 ### Key Files to Know
-- `skill/src/harness_unity_bridge/cli.py` - THE deterministic command executor
-- `Editor/HarnessBridge.cs` - Unity command dispatcher
+- `skill/src/agents_unity_bridge/cli.py` - THE deterministic command executor
+- `Editor/AgentsBridge.cs` - Unity command dispatcher
 - `Editor/Models/CommandResponse.cs` - Response structure
 - `skill/tests/test_cli.py` - Python test suite
 - `skill/SKILL.md` - User-facing documentation

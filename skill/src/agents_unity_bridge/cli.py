@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 """
-Harness Unity Bridge - Command Execution Script
+Agents Unity Bridge - Command Execution Script
 
 Rock-solid, deterministic command execution for Unity Editor operations.
 Handles UUID generation, file-based polling, response parsing, and cleanup.
 
-Also provides skill installation commands for DeepSeek Harness integration.
+The core bridge is agent-agnostic; optional DeepSeek Harness skill-install commands are included.
 """
 
 import argparse
@@ -22,7 +22,7 @@ from pathlib import Path
 from typing import Dict, Any, Optional
 
 # Constants
-UNITY_DIR = Path.cwd() / ".harness-unity-bridge"
+UNITY_DIR = Path.cwd() / ".agents-unity-bridge"  # resolved from --project/env in main()
 DEFAULT_TIMEOUT = 30
 MIN_SLEEP = 0.1
 MAX_SLEEP = 1.0
@@ -34,10 +34,10 @@ BUILD_DEFAULT_TIMEOUT = 300  # 5 minutes default for builds
 
 def load_build_config(unity_bridge_dir: Path) -> Optional[Dict[str, Any]]:
     """
-    Load optional build configuration from .harness-unity-bridge/build.json.
+    Load optional build configuration from .agents-unity-bridge/build.json.
 
     Args:
-        unity_bridge_dir: Path to the .harness-unity-bridge directory
+        unity_bridge_dir: Path to the .agents-unity-bridge directory
 
     Returns:
         Parsed config dict, or None if file doesn't exist or is invalid.
@@ -51,6 +51,26 @@ def load_build_config(unity_bridge_dir: Path) -> Optional[Dict[str, Any]]:
     except (json.JSONDecodeError, Exception):
         return None
 
+
+def resolve_project_root(explicit: Optional[str] = None) -> Path:
+    """Resolve the Unity project root directory.
+
+    Priority:
+        1. `explicit` argument (e.g. from --project)
+        2. UNITY_BRIDGE_PROJECT environment variable
+        3. Walk up from the current directory looking for a Unity project
+           (a directory containing both `Assets/` and `ProjectSettings/`)
+        4. Fall back to the current directory.
+    """
+    candidate = explicit or os.environ.get("UNITY_BRIDGE_PROJECT")
+    if candidate:
+        return Path(candidate).expanduser().resolve()
+
+    start = Path.cwd()
+    for directory in (start, *start.parents):
+        if (directory / "Assets").is_dir() and (directory / "ProjectSettings").is_dir():
+            return directory
+    return start
 
 # Exit codes
 EXIT_SUCCESS = 0
@@ -88,20 +108,20 @@ def _validate_command_id(command_id: str) -> None:
 
 
 def check_gitignore_and_notify():
-    """Print a notice if .harness-unity-bridge/ is not in .gitignore."""
+    """Print a notice if .agents-unity-bridge/ is not in .gitignore."""
     gitignore_path = Path.cwd() / ".gitignore"
 
     if gitignore_path.exists():
         try:
             content = gitignore_path.read_text()
             # Check for various patterns that would ignore the directory
-            if ".harness-unity-bridge" in content:
+            if ".agents-unity-bridge" in content:
                 return  # Already ignored
         except Exception:
             pass  # If we can't read gitignore, show the notice
 
     print(
-        "\nNote: Add '.harness-unity-bridge/' to your .gitignore "
+        "\nNote: Add '.agents-unity-bridge/' to your .gitignore "
         "to avoid committing runtime files.\n",
         file=sys.stderr,
     )
@@ -126,7 +146,7 @@ def write_command(action: str, params: Dict[str, Any]) -> str:
 
     # Security: Ensure UNITY_DIR is not a symlink (prevent symlink attacks)
     if UNITY_DIR.exists() and UNITY_DIR.is_symlink():
-        raise UnityCommandError("Security error: .harness-unity-bridge cannot be a symlink")
+        raise UnityCommandError("Security error: .agents-unity-bridge cannot be a symlink")
 
     # Ensure directory exists
     dir_existed = UNITY_DIR.exists()
@@ -913,9 +933,10 @@ def execute_command(
     timeout: int,
     cleanup: bool = False,
     verbose: bool = False,
-) -> str:
+    raw: bool = False,
+) -> Any:
     """
-    Execute Unity command and return formatted response.
+    Execute Unity command and return formatted (or raw) response.
 
     Args:
         action: Command action
@@ -946,8 +967,9 @@ def execute_command(
 
     try:
         response = wait_for_response(command_id, timeout, verbose)
-        formatted = format_response(response, action)
-        return formatted
+        if raw:
+            return response
+        return format_response(response, action)
     finally:
         cleanup_response_file(command_id, verbose)
 
@@ -965,7 +987,7 @@ def get_skill_source_dir() -> Optional[Path]:
 
         # For Python 3.9+
         if hasattr(resources, "files"):
-            package_dir = resources.files("harness_unity_bridge")
+            package_dir = resources.files("agents_unity_bridge")
             skill_dir = Path(str(package_dir)) / "skill"
             if skill_dir.exists():
                 return skill_dir
@@ -1003,7 +1025,7 @@ def install_skill(verbose: bool = False) -> int:
         print("Error: Could not find skill files in package.", file=sys.stderr)
         print("This may indicate a corrupted installation.", file=sys.stderr)
         print(
-            "Try reinstalling: pip install --force-reinstall harness-unity-bridge",
+            "Try reinstalling: pip install --force-reinstall agents-unity-bridge",
             file=sys.stderr,
         )
         return EXIT_ERROR
@@ -1093,7 +1115,7 @@ def install_skill(verbose: bool = False) -> int:
         print(f"✓ Skill installed (copy): {target_dir}")
         print()
         print("Note: Using directory copy instead of symlink.")
-        print("To update the skill, re-run: python -m harness_unity_bridge.cli install-skill")
+        print("To update the skill, re-run: python -m agents_unity_bridge.cli install-skill")
         if platform.system() == "Windows":
             print()
             print("To enable symlinks (optional), enable Developer Mode:")
@@ -1175,7 +1197,7 @@ def update_package(verbose: bool = False) -> int:
     Returns:
         Exit code (0 for success, 1 for error).
     """
-    print("Updating harness-unity-bridge...")
+    print("Updating agents-unity-bridge...")
 
     try:
         # Run pip install --upgrade
@@ -1186,7 +1208,7 @@ def update_package(verbose: bool = False) -> int:
                 "pip",
                 "install",
                 "--upgrade",
-                "harness-unity-bridge",
+                "agents-unity-bridge",
             ],
             capture_output=not verbose,
             text=True,
@@ -1214,7 +1236,7 @@ def execute_health_check(timeout: int, verbose: bool) -> int:
     """Verify Unity Bridge is set up correctly."""
     print("Checking Unity Bridge setup...")
 
-    # Check 1: Does .harness-unity-bridge directory exist?
+    # Check 1: Does .agents-unity-bridge directory exist?
     if not UNITY_DIR.exists():
         print("✗ Unity Bridge not detected")
         print(f"  Directory not found: {UNITY_DIR}")
@@ -1252,7 +1274,7 @@ def _configure_output_encoding() -> None:
 def main():
     _configure_output_encoding()
     parser = argparse.ArgumentParser(
-        description="Execute Unity Editor commands via Harness Unity Bridge",
+        description="Execute Unity Editor commands via Agents Unity Bridge",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Unity Commands:
@@ -1291,7 +1313,7 @@ Examples:
   %(prog)s step
   %(prog)s build
   %(prog)s build --target Android --development
-  %(prog)s build --method DeepSeekAI.Builder.BuildEntryPoints.BuildQuest
+  %(prog)s build --method MyProject.Builder.BuildEntryPoints.BuildQuest
   %(prog)s build --profile quest
   %(prog)s get-dependencies --asset Assets/Foo.prefab --recursive
   %(prog)s find-references --asset Assets/Foo.mat
@@ -1373,7 +1395,7 @@ Examples:
     )
     parser.add_argument(
         "--profile",
-        help="Build profile name from .harness-unity-bridge/build.json (for build)",
+        help="Build profile name from .agents-unity-bridge/build.json (for build)",
     )
     parser.add_argument(
         "--output",
@@ -1464,6 +1486,16 @@ Examples:
         help="Cleanup old response files before executing",
     )
     parser.add_argument("--verbose", action="store_true", help="Print verbose progress messages")
+    parser.add_argument(
+        "--project",
+        help="Unity project root directory (default: auto-detect from cwd or UNITY_BRIDGE_PROJECT env)",
+    )
+    parser.add_argument(
+        "--format",
+        choices=["human", "json"],
+        default="human",
+        help="Output format: human-readable text or raw JSON (default: human)",
+    )
 
     args = parser.parse_args()
 
@@ -1476,6 +1508,14 @@ Examples:
 
     if args.command == "update":
         return update_package(args.verbose)
+
+    # Resolve the Unity project root (--project > env > auto-detect). Only override the
+    # bridge dir when a non-default project is actually selected, so embedded callers
+    # and tests that pre-set UNITY_DIR keep working.
+    global UNITY_DIR
+    project_root = resolve_project_root(args.project)
+    if args.project or os.environ.get("UNITY_BRIDGE_PROJECT") or project_root != Path.cwd():
+        UNITY_DIR = project_root / ".agents-unity-bridge"
 
     # Validate timeout (only for Unity commands)
     if args.timeout <= 0:
@@ -1517,7 +1557,7 @@ Examples:
             if build_config is None:
                 print(
                     f"Error: Build profile '{args.profile}' requested but "
-                    f"no .harness-unity-bridge/build.json found.",
+                    f"no .agents-unity-bridge/build.json found.",
                     file=sys.stderr,
                 )
                 return EXIT_ERROR
@@ -1620,8 +1660,12 @@ Examples:
             timeout=args.timeout,
             cleanup=args.cleanup,
             verbose=args.verbose,
+            raw=(args.format == "json"),
         )
-        print(result)
+        if args.format == "json":
+            print(json.dumps(result, indent=2))
+        else:
+            print(result)
         return EXIT_SUCCESS
 
     except CommandTimeoutError as e:

@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to the Harness Unity Bridge package will be documented in this file.
+All notable changes to the Agents Unity Bridge package will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
@@ -22,7 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- **UTF-8 response decoding**: the CLI read `.harness-unity-bridge` response files with the
+- **UTF-8 response decoding**: the CLI read `.agents-unity-bridge` response files with the
   platform default encoding (GBK on Chinese Windows), which crashed with an "illegal multibyte
   sequence" error whenever Unity returned non-ASCII field values. Response and build-config
   reads now explicitly use UTF-8.
@@ -130,7 +130,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Security
 
-- Restrict `.harness-unity-bridge/` directory and file permissions to owner-only on POSIX systems
+- Restrict `.agents-unity-bridge/` directory and file permissions to owner-only on POSIX systems
 - Add UUID validation for command IDs to prevent path traversal attacks
 - Verify response ID matches expected command ID to prevent response spoofing
 - Pin GitHub Actions to commit SHAs to prevent supply chain attacks
@@ -139,7 +139,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Dependabot configuration for automated dependency updates (GitHub Actions + pip)
-- `.gitignore` entries for `.harness-unity-bridge/`, `.env`, and secret file patterns
+- `.gitignore` entries for `.agents-unity-bridge/`, `.env`, and secret file patterns
 - CODEOWNERS for `@WarrenMondeville`
 
 ### Changed
@@ -184,14 +184,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Initial pre-release of Harness Unity Bridge as a standalone Unity package
+- Initial pre-release of Agents Unity Bridge as a standalone Unity package
 - File-based bridge enabling DeepSeek Harness to trigger Unity Editor operations
 - `run-tests` command - Execute EditMode or PlayMode tests with filtering
 - `compile` command - Trigger script compilation
 - `refresh` command - Force asset database refresh
 - `get-status` command - Check editor compilation/update state
 - `get-console-logs` command - Retrieve Unity console output with filtering
-- Multi-project support via per-project `.harness-unity-bridge/` directories
+- Multi-project support via per-project `.agents-unity-bridge/` directories
 - Tools menu with status display and cleanup utilities
 - Zero external dependencies - pure C# implementation
 - Support for Unity 2021.3 and later

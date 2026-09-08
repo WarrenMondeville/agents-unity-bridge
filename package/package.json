@@ -1,21 +1,21 @@
 {
-  "name": "com.deepseekai.harness-unity-bridge",
-  "version": "0.6.0",
-  "displayName": "DeepSeek Harness Unity Bridge",
-  "description": "File-based bridge enabling DeepSeek Harness to trigger Unity Editor operations (tests, compile, refresh, build, asset dependency analysis, prefab management, asset inspector dump) in a running editor instance.",
+  "name": "com.agents-unity-bridge",
+  "version": "0.7.0",
+  "displayName": "Agents Unity Bridge",
+  "description": "File-based bridge enabling AI agents to trigger Unity Editor operations (tests, compile, refresh, build, asset dependency analysis, prefab management, asset inspector dump) in a running editor instance.",
   "unity": "2021.3",
   "documentationUrl": "https://github.com/WarrenMondeville/harness-unity-bridge",
   "dependencies": {},
   "keywords": [
-    "deepseek",
-    "harness",
+    "agent",
+    "agents",
     "unity",
     "ai",
     "testing",
     "automation"
   ],
   "author": {
-      "name": "DeepSeek Harness",
+      "name": "Agents Unity Bridge",
       "url": "https://github.com/WarrenMondeville/harness-unity-bridge"
   }
 }

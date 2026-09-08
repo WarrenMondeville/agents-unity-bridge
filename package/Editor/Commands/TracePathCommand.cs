@@ -1,12 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using DeepSeekAI.HarnessBridge.Models;
+using UnityBridge.Models;
 using UnityEditor;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
 
-namespace DeepSeekAI.HarnessBridge.Commands {
+namespace UnityBridge.Commands {
     /// <summary>
     /// Finds the shortest dependency path (breadth-first search) from one asset to
     /// another through forward dependency edges. Read-only.
@@ -36,7 +36,7 @@ namespace DeepSeekAI.HarnessBridge.Commands {
             }
 
 #if DEBUG
-            Debug.Log($"{HarnessBridge.LogPrefix} trace-path: {from} -> {to} (maxDepth: {maxDepth})");
+            Debug.Log($"{AgentsBridge.LogPrefix} trace-path: {from} -> {to} (maxDepth: {maxDepth})");
 #endif
 
             try {
@@ -125,7 +125,7 @@ namespace DeepSeekAI.HarnessBridge.Commands {
             }
             catch (Exception e) {
                 stopwatch.Stop();
-                Debug.LogError($"{HarnessBridge.LogPrefix} trace-path failed: {e.Message}");
+                Debug.LogError($"{AgentsBridge.LogPrefix} trace-path failed: {e.Message}");
                 onComplete?.Invoke(CommandResponse.Error(request.id, request.action, e.Message));
             }
         }

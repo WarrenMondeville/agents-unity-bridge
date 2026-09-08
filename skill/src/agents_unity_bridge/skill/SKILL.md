@@ -3,11 +3,11 @@ name: unity-bridge
 description: >-
   Control the Unity Editor from DeepSeek Harness — run EditMode/PlayMode tests, compile scripts,
   refresh assets, read console logs, check editor status, control Play Mode, and build — through
-  the harness-unity-bridge file-based protocol.
+  the agents-unity-bridge file-based protocol.
 whenToUse: >-
   Use when working on or asking about a Unity project: running tests, checking compilation or
   console errors, refreshing assets, entering Play Mode, or building. Requires the
-  com.deepseekai.harness-unity-bridge package installed in the Unity project.
+  com.agents-unity-bridge package installed in the Unity project.
 ---
 
 # Unity Bridge Skill
@@ -16,7 +16,7 @@ Control Unity Editor operations from DeepSeek Harness using a reliable file-base
 
 ## Overview
 
-The Unity Bridge enables DeepSeek Harness to trigger operations in a running Unity Editor instance without network configuration or port conflicts. It uses a simple file-based protocol where commands are written to `.harness-unity-bridge/command.json` and responses are read from `.harness-unity-bridge/response-{id}.json`.
+The Unity Bridge enables DeepSeek Harness to trigger operations in a running Unity Editor instance without network configuration or port conflicts. It uses a simple file-based protocol where commands are written to `.agents-unity-bridge/command.json` and responses are read from `.agents-unity-bridge/response-{id}.json`.
 
 **Key Features:**
 - Execute EditMode and PlayMode tests
@@ -30,11 +30,11 @@ The Unity Bridge enables DeepSeek Harness to trigger operations in a running Uni
 - Prefab management (inspect metadata, dump hierarchy, create from scene)
 - Asset inspector dump (Inspector-visible serialized field values of prefabs, assets, and scenes)
 
-**Multi-Project Support:** Each Unity project has its own `.harness-unity-bridge/` directory, allowing multiple projects to be worked on simultaneously.
+**Multi-Project Support:** Each Unity project has its own `.agents-unity-bridge/` directory, allowing multiple projects to be worked on simultaneously.
 
 ## Requirements
 
-1. **Unity Package:** Install `com.deepseekai.harness-unity-bridge` in your Unity project
+1. **Unity Package:** Install `com.agents-unity-bridge` in your Unity project
    - Via Package Manager: `https://github.com/WarrenMondeville/harness-unity-bridge.git?path=package`
    - See main package README for installation instructions
 
@@ -44,7 +44,7 @@ The Unity Bridge enables DeepSeek Harness to trigger operations in a running Uni
 
 ## How It Works
 
-The skill uses a CLI tool (`harness-unity-bridge`) that handles:
+The skill uses a CLI tool (`agents-unity-bridge`) that handles:
 - UUID generation for command tracking
 - Atomic file writes to prevent corruption
 - Exponential backoff polling for responses
@@ -61,7 +61,7 @@ This approach ensures **deterministic, rock-solid execution** - the script is te
 When you need to interact with Unity, use the CLI directly:
 
 ```bash
-harness-unity-bridge [command] [options]
+agents-unity-bridge [command] [options]
 ```
 
 All commands automatically:
@@ -79,13 +79,13 @@ Execute Unity tests in EditMode or PlayMode:
 
 ```bash
 # Run all EditMode tests
-harness-unity-bridge run-tests --mode EditMode
+agents-unity-bridge run-tests --mode EditMode
 
 # Run tests with filter
-harness-unity-bridge run-tests --mode EditMode --filter "DeepSeekAI.Tests"
+agents-unity-bridge run-tests --mode EditMode --filter "MyProject.Tests"
 
 # Run all tests (both modes)
-harness-unity-bridge run-tests
+agents-unity-bridge run-tests
 ```
 
 **Output:**
@@ -96,9 +96,9 @@ harness-unity-bridge run-tests
 Duration: 1.25s
 
 Failed Tests:
-  - DeepSeekAI.Tests.AuthTests.LoginWithInvalidCredentials
+  - MyProject.Tests.AuthTests.LoginWithInvalidCredentials
     Expected: success, Actual: failure
-  - DeepSeekAI.Tests.NetworkTests.TimeoutHandling
+  - MyProject.Tests.NetworkTests.TimeoutHandling
     NullReferenceException: Object reference not set
 ```
 
@@ -112,7 +112,7 @@ Failed Tests:
 Trigger Unity script compilation:
 
 ```bash
-harness-unity-bridge compile
+agents-unity-bridge compile
 ```
 
 **Output (Success):**
@@ -135,13 +135,13 @@ Retrieve Unity console output:
 
 ```bash
 # Get last 20 logs
-harness-unity-bridge get-console-logs --limit 20
+agents-unity-bridge get-console-logs --limit 20
 
 # Get only errors
-harness-unity-bridge get-console-logs --limit 10 --filter Error
+agents-unity-bridge get-console-logs --limit 10 --filter Error
 
 # Get warnings
-harness-unity-bridge get-console-logs --filter Warning
+agents-unity-bridge get-console-logs --filter Warning
 ```
 
 **Output:**
@@ -166,7 +166,7 @@ Console Logs (last 10, filtered by Error):
 Check Unity Editor state:
 
 ```bash
-harness-unity-bridge get-status
+agents-unity-bridge get-status
 ```
 
 **Output:**
@@ -187,7 +187,7 @@ Unity Editor Status:
 Force Unity to refresh assets:
 
 ```bash
-harness-unity-bridge refresh
+agents-unity-bridge refresh
 ```
 
 **Output:**
@@ -202,13 +202,13 @@ Toggle Play Mode, pause, and step through frames:
 
 ```bash
 # Enter/exit Play Mode (toggle)
-harness-unity-bridge play
+agents-unity-bridge play
 
 # Pause/unpause (while in Play Mode)
-harness-unity-bridge pause
+agents-unity-bridge pause
 
 # Step one frame (while in Play Mode)
-harness-unity-bridge step
+agents-unity-bridge step
 ```
 
 **Output (play):**
@@ -243,19 +243,19 @@ Build the Unity project using either direct `BuildPipeline.BuildPlayer()` or a c
 
 ```bash
 # Direct build with current active target
-harness-unity-bridge build
+agents-unity-bridge build
 
 # Direct build for specific target
-harness-unity-bridge build --target Android --development
+agents-unity-bridge build --target Android --development
 
 # Custom build pipeline via static method invocation
-harness-unity-bridge build --method DeepSeekAI.Builder.BuildEntryPoints.BuildQuest
+agents-unity-bridge build --method MyProject.Builder.BuildEntryPoints.BuildQuest
 
 # With environment variables
-harness-unity-bridge build --method DeepSeekAI.Builder.BuildEntryPoints.BuildQuest --env BUILD_TYPE=production --env SCRIPTING_BACKEND=il2cpp
+agents-unity-bridge build --method MyProject.Builder.BuildEntryPoints.BuildQuest --env BUILD_TYPE=production --env SCRIPTING_BACKEND=il2cpp
 
-# Using a named build profile (from .harness-unity-bridge/build.json)
-harness-unity-bridge build --profile quest
+# Using a named build profile (from .agents-unity-bridge/build.json)
+agents-unity-bridge build --profile quest
 ```
 
 **Output (Success):**
@@ -281,28 +281,28 @@ Build Failed: 5 error(s), 2 warning(s)
 ```
 
 **Parameters:**
-- `--method` - Fully qualified static method (e.g., `DeepSeekAI.Builder.BuildEntryPoints.BuildQuest`)
+- `--method` - Fully qualified static method (e.g., `MyProject.Builder.BuildEntryPoints.BuildQuest`)
 - `--target` - BuildTarget enum name (e.g., `Android`, `StandaloneWindows64`, `iOS`)
 - `--development` - Enable development build flag
 - `--env` - Environment variable `KEY=VALUE` (repeatable)
-- `--profile` - Named profile from `.harness-unity-bridge/build.json`
+- `--profile` - Named profile from `.agents-unity-bridge/build.json`
 - `--output` - Override output path
 - `--timeout` - Override default 300s timeout
 
 **Build Profiles:**
 
-For projects with custom build pipelines, create `.harness-unity-bridge/build.json` to define named profiles:
+For projects with custom build pipelines, create `.agents-unity-bridge/build.json` to define named profiles:
 
 ```json
 {
   "profiles": {
     "quest": {
-      "method": "DeepSeekAI.Builder.BuildEntryPoints.BuildQuest",
+      "method": "MyProject.Builder.BuildEntryPoints.BuildQuest",
       "env": { "BUILD_TYPE": "development", "SCRIPTING_BACKEND": "il2cpp" },
       "timeout": 600
     },
     "pico": {
-      "method": "DeepSeekAI.Builder.BuildEntryPoints.BuildPico"
+      "method": "MyProject.Builder.BuildEntryPoints.BuildPico"
     }
   }
 }
@@ -320,22 +320,22 @@ Analyze asset references, find unused assets, and trace dependency paths — pow
 
 ```bash
 # What does this asset depend on? (direct by default, --recursive for the full closure)
-harness-unity-bridge get-dependencies --asset Assets/Prefabs/Player.prefab --recursive
+agents-unity-bridge get-dependencies --asset Assets/Prefabs/Player.prefab --recursive
 
 # What references this asset? (impact analysis before changing/deleting it)
-harness-unity-bridge find-references --asset Assets/Materials/Player.mat
+agents-unity-bridge find-references --asset Assets/Materials/Player.mat
 
 # Which assets are unreachable from build scenes + Resources? (unused-asset candidates)
-harness-unity-bridge find-unused-assets
+agents-unity-bridge find-unused-assets
 
 # Is there a dependency chain from A to B? (shortest path via BFS)
-harness-unity-bridge trace-path --from Assets/Scenes/Main.unity --to Assets/Materials/Fx.mat
+agents-unity-bridge trace-path --from Assets/Scenes/Main.unity --to Assets/Materials/Fx.mat
 
 # Find assets by name/type
-harness-unity-bridge search-assets --query "Player" --type Prefab --limit 20
+agents-unity-bridge search-assets --query "Player" --type Prefab --limit 20
 
 # Identity + dependency metrics for one asset
-harness-unity-bridge get-asset-info --asset Assets/Prefabs/Player.prefab
+agents-unity-bridge get-asset-info --asset Assets/Prefabs/Player.prefab
 ```
 
 **Output (get-dependencies):**
@@ -361,13 +361,13 @@ Inspect prefab metadata, dump its hierarchy, and create prefab assets from scene
 
 ```bash
 # Prefab metadata (GUID, type, root components, child count, variant info)
-harness-unity-bridge manage-prefabs --action get-info --prefab-path Assets/Prefabs/Player.prefab
+agents-unity-bridge manage-prefabs --action get-info --prefab-path Assets/Prefabs/Player.prefab
 
 # Full prefab hierarchy (names, paths, components, nested-prefab info)
-harness-unity-bridge manage-prefabs --action get-hierarchy --prefab-path Assets/Prefabs/Player.prefab
+agents-unity-bridge manage-prefabs --action get-hierarchy --prefab-path Assets/Prefabs/Player.prefab
 
 # Create a prefab asset from a scene GameObject
-harness-unity-bridge manage-prefabs --action create --object Player --prefab-path Assets/Prefabs/Player.prefab
+agents-unity-bridge manage-prefabs --action create --object Player --prefab-path Assets/Prefabs/Player.prefab
 ```
 
 **Output (get-info):**
@@ -394,13 +394,13 @@ Dump Inspector-visible serialized field values of a prefab, asset, or scene — 
 
 ```bash
 # Prefab: full GameObject hierarchy + per-component field values
-harness-unity-bridge dump-asset --asset Assets/Prefabs/BatPF.prefab
+agents-unity-bridge dump-asset --asset Assets/Prefabs/BatPF.prefab
 
 # ScriptableObject / other .asset
-harness-unity-bridge dump-asset --asset Assets/Data/SampleData.asset
+agents-unity-bridge dump-asset --asset Assets/Data/SampleData.asset
 
 # Scene (the currently open scene)
-harness-unity-bridge dump-asset --asset Assets/Scenes/Main.unity
+agents-unity-bridge dump-asset --asset Assets/Scenes/Main.unity
 ```
 
 **Output (prefab):**
@@ -432,7 +432,7 @@ Data
 Override the default 30-second timeout:
 
 ```bash
-harness-unity-bridge run-tests --timeout 60
+agents-unity-bridge run-tests --timeout 60
 ```
 
 Use longer timeouts for:
@@ -445,7 +445,7 @@ Use longer timeouts for:
 Automatically remove old response files before executing:
 
 ```bash
-harness-unity-bridge compile --cleanup
+agents-unity-bridge compile --cleanup
 ```
 
 This removes response files older than 1 hour. Useful for maintaining a clean workspace.
@@ -455,7 +455,7 @@ This removes response files older than 1 hour. Useful for maintaining a clean wo
 See detailed execution progress:
 
 ```bash
-harness-unity-bridge run-tests --verbose
+agents-unity-bridge run-tests --verbose
 ```
 
 Prints:
@@ -512,7 +512,7 @@ DeepSeek Harness will automatically use this skill to execute the commands via t
 
 ### Command Format
 
-Written to `.harness-unity-bridge/command.json`:
+Written to `.agents-unity-bridge/command.json`:
 
 ```json
 {
@@ -527,7 +527,7 @@ Written to `.harness-unity-bridge/command.json`:
 
 ### Response Format
 
-Read from `.harness-unity-bridge/response-{id}.json`:
+Read from `.agents-unity-bridge/response-{id}.json`:
 
 ```json
 {
@@ -557,7 +557,7 @@ skill/
 ├── SKILL.md                    # This file
 ├── pyproject.toml              # Package configuration
 ├── src/
-│   └── harness_unity_bridge/
+│   └── agents_unity_bridge/
 │       ├── __init__.py         # Package version
 │       └── cli.py              # CLI implementation
 ├── tests/
@@ -583,16 +583,16 @@ For more information, see:
 **Solutions:**
 1. Ensure Unity Editor is open with the project loaded
 2. Check that the package is installed (`Window > Package Manager`)
-3. Verify `.harness-unity-bridge/` directory exists in project root
-4. Check Unity Console for errors from HarnessBridge package
+3. Verify `.agents-unity-bridge/` directory exists in project root
+4. Check Unity Console for errors from AgentsBridge package
 
 ### Response File Issues
 
 **Symptoms:** "Failed to parse response JSON" error
 
 **Solutions:**
-1. Check Unity Console for HarnessBridge errors
-2. Manually inspect `.harness-unity-bridge/response-*.json` files
+1. Check Unity Console for AgentsBridge errors
+2. Manually inspect `.agents-unity-bridge/response-*.json` files
 3. Try cleaning up old responses with `--cleanup` flag
 4. Restart Unity Editor if file system is in bad state
 
@@ -613,15 +613,15 @@ For more information, see:
 **Solutions:**
 1. The CLI handles file locking automatically with retries
 2. If persistent, check for antivirus interference
-3. Verify file permissions on `.harness-unity-bridge/` directory
+3. Verify file permissions on `.agents-unity-bridge/` directory
 
 ## Installation
 
 ### Quick Install
 
 ```bash
-pip install harness-unity-bridge
-harness-unity-bridge install-skill
+pip install agents-unity-bridge
+agents-unity-bridge install-skill
 ```
 
 This installs the CLI and the DeepSeek Harness skill.
@@ -629,13 +629,13 @@ This installs the CLI and the DeepSeek Harness skill.
 ### Verify Setup
 
 ```bash
-harness-unity-bridge health-check
+agents-unity-bridge health-check
 ```
 
 ### Updating
 
 ```bash
-harness-unity-bridge update
+agents-unity-bridge update
 ```
 
 This upgrades the pip package and reinstalls the skill.
@@ -643,16 +643,16 @@ This upgrades the pip package and reinstalls the skill.
 ### Uninstalling
 
 ```bash
-harness-unity-bridge uninstall-skill
-pip uninstall harness-unity-bridge
+agents-unity-bridge uninstall-skill
+pip uninstall agents-unity-bridge
 ```
 
 ### Development Installation
 
 ```bash
-cd harness-unity-bridge/skill
+cd agents-unity-bridge/skill
 pip install -e ".[dev]"
-harness-unity-bridge install-skill
+agents-unity-bridge install-skill
 ```
 
 ## Why a CLI Tool?

@@ -1,8 +1,8 @@
-using DeepSeekAI.HarnessBridge.Commands;
-using DeepSeekAI.HarnessBridge.Models;
+using UnityBridge.Commands;
+using UnityBridge.Models;
 using NUnit.Framework;
 
-namespace DeepSeekAI.HarnessBridge.Tests.Commands {
+namespace UnityBridge.Tests.Commands {
     /// <summary>
     /// Tests for FindReferencesCommand.
     /// Focus: parameter validation, error handling, response construction.

@@ -12,7 +12,7 @@ pip install -r requirements-dev.txt
 pytest tests/test_cli.py -v
 
 # Run with coverage
-pytest tests/test_cli.py -v --cov=src/harness_unity_bridge --cov-report=html
+pytest tests/test_cli.py -v --cov=src/agents_unity_bridge --cov-report=html
 ```
 
 ## Test Structure
@@ -49,7 +49,7 @@ pytest tests/test_cli.py::TestFormatTestResults::test_all_tests_passed -v
 ### With Coverage
 
 ```bash
-pytest tests/test_cli.py --cov=src/harness_unity_bridge --cov-report=term-missing
+pytest tests/test_cli.py --cov=src/agents_unity_bridge --cov-report=term-missing
 ```
 
 This shows which lines are not covered by tests.
@@ -57,7 +57,7 @@ This shows which lines are not covered by tests.
 ### Generate HTML Coverage Report
 
 ```bash
-pytest tests/test_cli.py --cov=src/harness_unity_bridge --cov-report=html
+pytest tests/test_cli.py --cov=src/agents_unity_bridge --cov-report=html
 open htmlcov/index.html
 ```
 
@@ -88,7 +88,7 @@ For manual testing with a real Unity instance:
 
 ### 1. Start Unity
 
-Open Unity Editor with a project that has the Harness Unity Bridge package installed.
+Open Unity Editor with a project that has the Agents Unity Bridge package installed.
 
 ### 2. Run Commands
 
@@ -96,34 +96,34 @@ Open Unity Editor with a project that has the Harness Unity Bridge package insta
 cd skill
 
 # Check editor status
-python3 src/harness_unity_bridge/cli.py get-status
+python3 src/agents_unity_bridge/cli.py get-status
 
 # Trigger compilation
-python3 src/harness_unity_bridge/cli.py compile
+python3 src/agents_unity_bridge/cli.py compile
 
 # Run tests
-python3 src/harness_unity_bridge/cli.py run-tests --mode EditMode
+python3 src/agents_unity_bridge/cli.py run-tests --mode EditMode
 
 # Get console logs
-python3 src/harness_unity_bridge/cli.py get-console-logs --limit 10 --filter Error
+python3 src/agents_unity_bridge/cli.py get-console-logs --limit 10 --filter Error
 
 # Refresh assets
-python3 src/harness_unity_bridge/cli.py refresh
+python3 src/agents_unity_bridge/cli.py refresh
 ```
 
 ### 3. Test Error Scenarios
 
 ```bash
 # Close Unity to test "Unity not running" error
-python3 src/harness_unity_bridge/cli.py get-status
+python3 src/agents_unity_bridge/cli.py get-status
 # Should error: "Unity Editor not detected"
 
 # Test timeout
-python3 src/harness_unity_bridge/cli.py get-status --timeout 2
+python3 src/agents_unity_bridge/cli.py get-status --timeout 2
 # If Unity is slow to respond, will timeout
 
 # Test verbose mode
-python3 src/harness_unity_bridge/cli.py compile --verbose
+python3 src/agents_unity_bridge/cli.py compile --verbose
 # Shows detailed execution progress
 ```
 
@@ -153,7 +153,7 @@ Example:
 def test_new_feature(tmp_path):
     """Test description"""
     # Setup
-    with patch('harness_unity_bridge.cli.UNITY_DIR', tmp_path):
+    with patch('agents_unity_bridge.cli.UNITY_DIR', tmp_path):
         # Execute
         result = your_new_function()
 
@@ -165,7 +165,7 @@ def test_new_feature(tmp_path):
 
 ### Import Errors
 
-If you see `ModuleNotFoundError: No module named 'harness_unity_bridge'`:
+If you see `ModuleNotFoundError: No module named 'agents_unity_bridge'`:
 
 ```bash
 # Ensure you're in the skill directory
@@ -212,10 +212,10 @@ To test performance of response polling:
 
 ```python
 import time
-from harness_unity_bridge.cli import wait_for_response
+from agents_unity_bridge.cli import wait_for_response
 
 def test_polling_performance(tmp_path):
-    with patch('harness_unity_bridge.cli.UNITY_DIR', tmp_path):
+    with patch('agents_unity_bridge.cli.UNITY_DIR', tmp_path):
         # Measure polling overhead
         start = time.time()
         try:

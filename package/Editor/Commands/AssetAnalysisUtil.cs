@@ -1,7 +1,7 @@
 using System.Text.RegularExpressions;
 using UnityEditor;
 
-namespace DeepSeekAI.HarnessBridge.Commands {
+namespace UnityBridge.Commands {
     /// <summary>
     /// Shared helpers for asset dependency analysis commands.
     /// </summary>

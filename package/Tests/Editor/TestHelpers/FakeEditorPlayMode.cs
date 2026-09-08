@@ -1,7 +1,7 @@
 using System.Collections.Generic;
-using DeepSeekAI.HarnessBridge.Commands;
+using UnityBridge.Commands;
 
-namespace DeepSeekAI.HarnessBridge.Tests.TestHelpers {
+namespace UnityBridge.Tests.TestHelpers {
     /// <summary>
     /// Hand-written fake of <see cref="IEditorPlayMode"/> used to test play/pause/step
     /// commands without pulling in the external Moq dependency.

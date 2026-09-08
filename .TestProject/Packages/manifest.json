@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "com.deepseekai.harness-unity-bridge": "file:../../package",
+    "com.agents-unity-bridge": "file:../../package",
     "com.unity.ai.navigation": "2.0.9",
     "com.unity.collab-proxy": "2.9.3",
     "com.unity.ide.rider": "3.0.38",
@@ -43,6 +43,6 @@
     "com.unity.modules.xr": "1.0.0"
   },
   "testables": [
-    "com.deepseekai.harness-unity-bridge"
+    "com.agents-unity-bridge"
   ]
 }

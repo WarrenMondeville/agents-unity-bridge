@@ -1,12 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using DeepSeekAI.HarnessBridge.Models;
+using UnityBridge.Models;
 using UnityEditor.TestTools.TestRunner.Api;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
 
-namespace DeepSeekAI.HarnessBridge.Commands {
+namespace UnityBridge.Commands {
     public class RunTestsCommand : ICommand {
         public void Execute(CommandRequest request, Action<CommandResponse> onProgress, Action<CommandResponse> onComplete) {
             var stopwatch = Stopwatch.StartNew();
@@ -26,7 +26,7 @@ namespace DeepSeekAI.HarnessBridge.Commands {
             }
 
 #if DEBUG
-            Debug.Log($"{HarnessBridge.LogPrefix} Running tests - Mode: {testMode}, Filter: {request.@params?.filter ?? "none"}");
+            Debug.Log($"{AgentsBridge.LogPrefix} Running tests - Mode: {testMode}, Filter: {request.@params?.filter ?? "none"}");
 #endif
 
             var response = CommandResponse.Running(request.id, request.action);
@@ -83,7 +83,7 @@ namespace DeepSeekAI.HarnessBridge.Commands {
             public void RunStarted(ITestAdaptor testsToRun) {
                 _total = CountTests(testsToRun);
 #if DEBUG
-                Debug.Log($"{HarnessBridge.LogPrefix} Test run started - {_total} tests");
+                Debug.Log($"{AgentsBridge.LogPrefix} Test run started - {_total} tests");
 #endif
 
                 var response = CommandResponse.Running(_commandId, "run-tests");
@@ -97,7 +97,7 @@ namespace DeepSeekAI.HarnessBridge.Commands {
             public void RunFinished(ITestResultAdaptor result) {
                 _stopwatch.Stop();
 #if DEBUG
-                Debug.Log($"{HarnessBridge.LogPrefix} Test run finished - Passed: {_passed}, Failed: {_failed}, Skipped: {_skipped}");
+                Debug.Log($"{AgentsBridge.LogPrefix} Test run finished - Passed: {_passed}, Failed: {_failed}, Skipped: {_skipped}");
 #endif
 
                 var response = _failed > 0

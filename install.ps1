@@ -1,4 +1,4 @@
-# Harness Unity Bridge - Quick Installer (PowerShell)
+# Agents Unity Bridge - Quick Installer (PowerShell)
 #
 # Usage:
 #   irm https://raw.githubusercontent.com/WarrenMondeville/harness-unity-bridge/main/install.ps1 | iex
@@ -8,7 +8,7 @@
 
 $ErrorActionPreference = "Stop"
 
-Write-Host "Installing Harness Unity Bridge..." -ForegroundColor Cyan
+Write-Host "Installing Agents Unity Bridge..." -ForegroundColor Cyan
 Write-Host ""
 
 # Check Python
@@ -37,7 +37,7 @@ Write-Host "Found Python: $pythonCmd" -ForegroundColor Green
 # Install via pip (user-site to avoid permission issues)
 Write-Host ""
 Write-Host "Installing pip package..." -ForegroundColor Cyan
-& $pythonCmd -m pip install --user --upgrade harness-unity-bridge
+& $pythonCmd -m pip install --user --upgrade agents-unity-bridge
 if ($LASTEXITCODE -ne 0) {
     Write-Host "Error: pip installation failed" -ForegroundColor Red
     exit 1
@@ -67,7 +67,7 @@ else {
 # Install skill
 Write-Host ""
 Write-Host "Installing DeepSeek Harness skill..." -ForegroundColor Cyan
-& $pythonCmd -m harness_unity_bridge.cli install-skill
+& $pythonCmd -m agents_unity_bridge.cli install-skill
 if ($LASTEXITCODE -ne 0) {
     Write-Host "Error: Skill installation failed" -ForegroundColor Red
     exit 1

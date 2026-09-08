@@ -1,6 +1,6 @@
 using UnityEditor;
 
-namespace DeepSeekAI.HarnessBridge.Commands {
+namespace UnityBridge.Commands {
     public class EditorPlayMode : IEditorPlayMode {
         public bool IsPlaying {
             get => EditorApplication.isPlaying;

@@ -1,4 +1,4 @@
-# Harness Unity Bridge
+# Agents Unity Bridge
 
 ![Unity 2021.3+](https://img.shields.io/badge/Unity-2021.3%2B-black.svg)
 ![Python 3.8+](https://img.shields.io/badge/Python-3.8%2B-blue.svg)
@@ -41,7 +41,7 @@ irm https://raw.githubusercontent.com/WarrenMondeville/harness-unity-bridge/main
 ```
 
 安装脚本会完成以下事情：
-- 安装 `harness-unity-bridge` 这个 pip 包（提供 `harness-unity-bridge` 命令行工具）
+- 安装 `agents-unity-bridge` 这个 pip 包（提供 `agents-unity-bridge` 命令行工具）
 - 将 Python 的 scripts 目录加入 PATH
 - 把 DeepSeek Harness 技能安装到 `~/.dsh/skills/unity-bridge/`
 
@@ -66,48 +66,48 @@ https://github.com/WarrenMondeville/harness-unity-bridge.git?path=package
 也可以直接使用命令行工具：
 
 ```bash
-harness-unity-bridge run-tests --mode EditMode
-harness-unity-bridge compile
-harness-unity-bridge get-console-logs --limit 10
+agents-unity-bridge run-tests --mode EditMode
+agents-unity-bridge compile
+agents-unity-bridge get-console-logs --limit 10
 ```
 
 其它常用命令：
 
 ```bash
-harness-unity-bridge get-status                    # 查看编辑器状态
-harness-unity-bridge refresh                       # 刷新资源数据库
-harness-unity-bridge play / pause / step           # 控制 Play Mode
-harness-unity-bridge build --target Android        # 构建项目
-harness-unity-bridge get-dependencies --asset Assets/Foo.prefab --recursive   # 正向依赖
-harness-unity-bridge find-references --asset Assets/Foo.mat                    # 反向引用
-harness-unity-bridge find-unused-assets                                       # 未使用资源
-harness-unity-bridge trace-path --from Assets/A.prefab --to Assets/D.fbx      # 依赖路径
-harness-unity-bridge search-assets --query "Player" --type Prefab             # 搜索资源
-harness-unity-bridge get-asset-info --asset Assets/Foo.prefab                 # 资源信息
-harness-unity-bridge manage-prefabs --action get-info --prefab-path Assets/Prefabs/Foo.prefab   # 预制体信息
-harness-unity-bridge manage-prefabs --action create --object MyObj --prefab-path Assets/Prefabs/Foo.prefab  # 创建预制体
-harness-unity-bridge dump-asset --asset Assets/Prefabs/Foo.prefab                                           # 导出资源字段
-harness-unity-bridge health-check                  # 检查桥接环境是否就绪
+agents-unity-bridge get-status                    # 查看编辑器状态
+agents-unity-bridge refresh                       # 刷新资源数据库
+agents-unity-bridge play / pause / step           # 控制 Play Mode
+agents-unity-bridge build --target Android        # 构建项目
+agents-unity-bridge get-dependencies --asset Assets/Foo.prefab --recursive   # 正向依赖
+agents-unity-bridge find-references --asset Assets/Foo.mat                    # 反向引用
+agents-unity-bridge find-unused-assets                                       # 未使用资源
+agents-unity-bridge trace-path --from Assets/A.prefab --to Assets/D.fbx      # 依赖路径
+agents-unity-bridge search-assets --query "Player" --type Prefab             # 搜索资源
+agents-unity-bridge get-asset-info --asset Assets/Foo.prefab                 # 资源信息
+agents-unity-bridge manage-prefabs --action get-info --prefab-path Assets/Prefabs/Foo.prefab   # 预制体信息
+agents-unity-bridge manage-prefabs --action create --object MyObj --prefab-path Assets/Prefabs/Foo.prefab  # 创建预制体
+agents-unity-bridge dump-asset --asset Assets/Prefabs/Foo.prefab                                           # 导出资源字段
+agents-unity-bridge health-check                  # 检查桥接环境是否就绪
 ```
 
 ### 更新
 
 ```bash
-harness-unity-bridge update
+agents-unity-bridge update
 ```
 
 ## ⚙️ 工作原理
 
 ```
-DeepSeek Harness → harness-unity-bridge CLI → .harness-unity-bridge/command.json → Unity Editor → response.json
+DeepSeek Harness → agents-unity-bridge CLI → .agents-unity-bridge/command.json → Unity Editor → response.json
 ```
 
-1. DeepSeek Harness（或你自己）运行 `harness-unity-bridge` 命令
-2. CLI 把命令写入 `.harness-unity-bridge/command.json`
+1. DeepSeek Harness（或你自己）运行 `agents-unity-bridge` 命令
+2. CLI 把命令写入 `.agents-unity-bridge/command.json`
 3. Unity Editor 轮询并执行该命令
-4. 结果写入 `.harness-unity-bridge/response-{id}.json`
+4. 结果写入 `.agents-unity-bridge/response-{id}.json`
 
-每个 Unity 工程都有自己的 `.harness-unity-bridge/` 目录，因此支持多工程并行。
+每个 Unity 工程都有自己的 `.agents-unity-bridge/` 目录，因此支持多工程并行。
 
 **为什么用文件协议而不是网络？**
 - 无需任何网络配置，不存在端口冲突
@@ -121,7 +121,7 @@ DeepSeek Harness 通过名为 `unity-bridge` 的技能来“感知”如何操�
 
 - 技能文件位于 `~/.dsh/skills/unity-bridge/SKILL.md`
 - 在工程目录中询问「运行测试」「检查编译错误」等，Harness 会自动加载该技能并调用 CLI
-- 手动安装 / 卸载技能：`harness-unity-bridge install-skill` / `harness-unity-bridge uninstall-skill`
+- 手动安装 / 卸载技能：`agents-unity-bridge install-skill` / `agents-unity-bridge uninstall-skill`
 
 ## 📚 文档
 

@@ -1,4 +1,4 @@
-# Pre-commit hooks configuration for Harness Unity Bridge
+# Pre-commit hooks configuration for Agents Unity Bridge
 # See https://pre-commit.com for more information
 
 repos:

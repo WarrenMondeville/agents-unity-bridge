@@ -1,11 +1,11 @@
-using DeepSeekAI.HarnessBridge.Commands;
-using DeepSeekAI.HarnessBridge.Models;
+using UnityBridge.Commands;
+using UnityBridge.Models;
 using NUnit.Framework;
 using UnityEditor.Compilation;
 using UnityEngine.TestTools;
 using System.Reflection;
 
-namespace DeepSeekAI.HarnessBridge.Tests.Commands {
+namespace UnityBridge.Tests.Commands {
     /// <summary>
     /// Tests for CompileCommand.
     /// Focus: Tests REAL async behavior (event registration, state tracking, callback timing)
@@ -67,7 +67,7 @@ namespace DeepSeekAI.HarnessBridge.Tests.Commands {
             _command.Execute(Request, Responses.OnProgress, Responses.OnComplete);
 
             // Expect error log from CompileCommand
-            LogAssert.Expect(UnityEngine.LogType.Error, "[HarnessBridge] Compilation error: Test compilation error");
+            LogAssert.Expect(UnityEngine.LogType.Error, "[AgentsBridge] Compilation error: Test compilation error");
 
             // Simulate compilation errors
             var errorMessages = new CompilerMessage[] {
@@ -128,8 +128,8 @@ namespace DeepSeekAI.HarnessBridge.Tests.Commands {
             _command.Execute(Request, Responses.OnProgress, Responses.OnComplete);
 
             // Expect error logs from CompileCommand (one per error)
-            LogAssert.Expect(UnityEngine.LogType.Error, "[HarnessBridge] Compilation error: Error 1");
-            LogAssert.Expect(UnityEngine.LogType.Error, "[HarnessBridge] Compilation error: Error 2");
+            LogAssert.Expect(UnityEngine.LogType.Error, "[AgentsBridge] Compilation error: Error 1");
+            LogAssert.Expect(UnityEngine.LogType.Error, "[AgentsBridge] Compilation error: Error 2");
 
             // Simulate multiple assemblies with errors
             var errorMessages1 = new CompilerMessage[] {

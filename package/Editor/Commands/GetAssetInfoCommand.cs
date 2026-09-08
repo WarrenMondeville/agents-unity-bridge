@@ -2,12 +2,12 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using DeepSeekAI.HarnessBridge.Models;
+using UnityBridge.Models;
 using UnityEditor;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
 
-namespace DeepSeekAI.HarnessBridge.Commands {
+namespace UnityBridge.Commands {
     /// <summary>
     /// Returns identity and dependency metrics for a single asset. Read-only.
     /// </summary>
@@ -30,7 +30,7 @@ namespace DeepSeekAI.HarnessBridge.Commands {
             }
 
 #if DEBUG
-            Debug.Log($"{HarnessBridge.LogPrefix} get-asset-info: {asset}");
+            Debug.Log($"{AgentsBridge.LogPrefix} get-asset-info: {asset}");
 #endif
 
             try {
@@ -76,7 +76,7 @@ namespace DeepSeekAI.HarnessBridge.Commands {
             }
             catch (Exception e) {
                 stopwatch.Stop();
-                Debug.LogError($"{HarnessBridge.LogPrefix} get-asset-info failed: {e.Message}");
+                Debug.LogError($"{AgentsBridge.LogPrefix} get-asset-info failed: {e.Message}");
                 onComplete?.Invoke(CommandResponse.Error(request.id, request.action, e.Message));
             }
         }

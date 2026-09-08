@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace DeepSeekAI.HarnessBridge.Models {
+namespace UnityBridge.Models {
     [Serializable]
     public class CommandResponse {
         public string id;

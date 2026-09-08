@@ -1,10 +1,10 @@
 using System;
 using System.Diagnostics;
-using DeepSeekAI.HarnessBridge.Models;
+using UnityBridge.Models;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
 
-namespace DeepSeekAI.HarnessBridge.Commands {
+namespace UnityBridge.Commands {
     public class PlayCommand : ICommand {
         private readonly IEditorPlayMode _editor;
 
@@ -21,7 +21,7 @@ namespace DeepSeekAI.HarnessBridge.Commands {
                 stopwatch.Stop();
 
 #if DEBUG
-                Debug.Log($"{HarnessBridge.LogPrefix} Play mode toggled: isPlaying={willPlay}");
+                Debug.Log($"{AgentsBridge.LogPrefix} Play mode toggled: isPlaying={willPlay}");
 #endif
 
                 var response = CommandResponse.Success(request.id, request.action, stopwatch.ElapsedMilliseconds);
@@ -35,7 +35,7 @@ namespace DeepSeekAI.HarnessBridge.Commands {
             }
             catch (Exception e) {
                 stopwatch.Stop();
-                Debug.LogError($"{HarnessBridge.LogPrefix} Play mode toggle failed: {e.Message}");
+                Debug.LogError($"{AgentsBridge.LogPrefix} Play mode toggle failed: {e.Message}");
                 onComplete?.Invoke(CommandResponse.Error(request.id, request.action, e.Message));
             }
         }

@@ -5,8 +5,8 @@
 ```
 package/                     # Unity package (UPM)
 ├── Editor/
-│   ├── HarnessBridge.cs          # Main coordinator
-│   ├── HarnessBridge.asmdef      # Assembly definition
+│   ├── AgentsBridge.cs          # Main coordinator
+│   ├── AgentsBridge.asmdef      # Assembly definition
 │   ├── Commands/
 │   │   ├── ICommand.cs          # Command interface
 │   │   ├── RunTestsCommand.cs   # Test execution
@@ -31,7 +31,7 @@ package/                     # Unity package (UPM)
 
 skill/                       # DeepSeek Harness skill (Python)
 ├── src/
-│   └── harness_unity_bridge/
+│   └── agents_unity_bridge/
 │       └── cli.py           # Deterministic command script
 ├── references/
 │   ├── COMMANDS.md          # Complete command specification

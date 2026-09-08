@@ -58,7 +58,7 @@ jobs:
     - name: Run tests
       run: |
         cd skill
-        pytest tests/test_cli.py -v --cov=src/harness_unity_bridge --cov-report=term-missing --cov-report=xml
+        pytest tests/test_cli.py -v --cov=src/agents_unity_bridge --cov-report=term-missing --cov-report=xml
 
     - name: Upload coverage to Codecov
       if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.11'
@@ -73,8 +73,8 @@ jobs:
 
     - name: Test CLI help
       run: |
-        harness-unity-bridge --help
+        agents-unity-bridge --help
 
     - name: Test CLI syntax
       run: |
-        python -m py_compile skill/src/harness_unity_bridge/cli.py
+        python -m py_compile skill/src/agents_unity_bridge/cli.py

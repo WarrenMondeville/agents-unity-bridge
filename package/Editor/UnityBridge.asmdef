@@ -1,6 +1,6 @@
 {
-    "name": "DeepSeekAI.HarnessBridge",
-    "rootNamespace": "DeepSeekAI.HarnessBridge",
+    "name": "UnityBridge",
+    "rootNamespace": "UnityBridge",
     "references": [
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner"

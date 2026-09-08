@@ -2,13 +2,13 @@
 
 ## How It Works
 
-HarnessBridge uses a file-based protocol for communication:
+AgentsBridge uses a file-based protocol for communication:
 
-1. **Command File**: DeepSeek Harness writes commands to `.harness-unity-bridge/command.json`
+1. **Command File**: DeepSeek Harness writes commands to `.agents-unity-bridge/command.json`
 2. **Processing**: Unity Editor polls for commands and executes them
-3. **Response File**: Results are written to `.harness-unity-bridge/response-{id}.json`
+3. **Response File**: Results are written to `.agents-unity-bridge/response-{id}.json`
 
-This approach enables multi-project support - each Unity project has its own `.harness-unity-bridge/` directory, allowing multiple agents to work on different projects simultaneously.
+This approach enables multi-project support - each Unity project has its own `.agents-unity-bridge/` directory, allowing multiple agents to work on different projects simultaneously.
 
 ## Commands
 
@@ -20,7 +20,7 @@ This approach enables multi-project support - each Unity project has its own `.h
   "action": "run-tests",
   "params": {
     "testMode": "EditMode",
-    "filter": "DeepSeekAI.Tests"
+    "filter": "MyProject.Tests"
   }
 }
 ```

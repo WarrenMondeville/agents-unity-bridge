@@ -2,12 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reflection;
-using DeepSeekAI.HarnessBridge.Models;
+using UnityBridge.Models;
 using UnityEditor;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
 
-namespace DeepSeekAI.HarnessBridge.Commands {
+namespace UnityBridge.Commands {
     public class GetConsoleLogsCommand : ICommand {
         // Default limit when no limit parameter is provided
         private const int DEFAULT_LOG_LIMIT = 50;
@@ -26,7 +26,7 @@ namespace DeepSeekAI.HarnessBridge.Commands {
         public void Execute(CommandRequest request, Action<CommandResponse> onProgress, Action<CommandResponse> onComplete) {
             var stopwatch = Stopwatch.StartNew();
 #if DEBUG
-            Debug.Log(HarnessBridge.LogPrefix + " Getting console logs");
+            Debug.Log(AgentsBridge.LogPrefix + " Getting console logs");
 #endif
 
             try {
@@ -52,7 +52,7 @@ namespace DeepSeekAI.HarnessBridge.Commands {
             }
             catch (Exception e) {
                 stopwatch.Stop();
-                Debug.LogError($"{HarnessBridge.LogPrefix} Error in GetConsoleLogsCommand: {e.Message}");
+                Debug.LogError($"{AgentsBridge.LogPrefix} Error in GetConsoleLogsCommand: {e.Message}");
                 var response = CommandResponse.Failure(request.id, request.action, stopwatch.ElapsedMilliseconds, e.Message);
                 onComplete?.Invoke(response);
             }
@@ -65,7 +65,7 @@ namespace DeepSeekAI.HarnessBridge.Commands {
                 // Use reflection to access Unity's internal LogEntries class
                 var logEntriesType = Type.GetType("UnityEditor.LogEntries, UnityEditor");
                 if (logEntriesType == null) {
-                    Debug.LogWarning(HarnessBridge.LogPrefix + " Could not access LogEntries type");
+                    Debug.LogWarning(AgentsBridge.LogPrefix + " Could not access LogEntries type");
                     return result;
                 }
 
@@ -75,7 +75,7 @@ namespace DeepSeekAI.HarnessBridge.Commands {
                 var endGettingEntriesMethod = logEntriesType.GetMethod("EndGettingEntries", BindingFlags.Static | BindingFlags.Public);
 
                 if (getCountMethod == null || getEntryInternalMethod == null) {
-                    Debug.LogWarning(HarnessBridge.LogPrefix + " Could not access LogEntries methods");
+                    Debug.LogWarning(AgentsBridge.LogPrefix + " Could not access LogEntries methods");
                     return result;
                 }
 
@@ -152,7 +152,7 @@ namespace DeepSeekAI.HarnessBridge.Commands {
                 endGettingEntriesMethod?.Invoke(null, null);
             }
             catch (Exception e) {
-                Debug.LogError($"{HarnessBridge.LogPrefix} Error getting console logs: {e.Message}");
+                Debug.LogError($"{AgentsBridge.LogPrefix} Error getting console logs: {e.Message}");
             }
 
             return result;

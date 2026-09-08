@@ -1,17 +1,17 @@
-using DeepSeekAI.HarnessBridge.Models;
+using UnityBridge.Models;
 using NUnit.Framework;
 using System.Text.RegularExpressions;
 using UnityEngine;
 
-namespace DeepSeekAI.HarnessBridge.Tests {
+namespace UnityBridge.Tests {
     /// <summary>
-    /// Tests for HarnessBridge dispatcher and validation logic.
+    /// Tests for AgentsBridge dispatcher and validation logic.
     /// Focus: Tests response ID validation, response factory methods, and error handling patterns.
     /// NOT testing: File I/O operations (require integration tests), Unity Editor static state.
     /// </summary>
     [TestFixture]
-    public class HarnessBridgeTests {
-        // Mirror the regex pattern from HarnessBridge for testing
+    public class AgentsBridgeTests {
+        // Mirror the regex pattern from AgentsBridge for testing
         private static readonly Regex ValidIdPattern = new Regex(@"^[a-fA-F0-9\-]+$", RegexOptions.Compiled);
 
         #region Response ID Validation Tests

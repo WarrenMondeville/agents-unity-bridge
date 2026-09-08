@@ -1,6 +1,6 @@
-# Contributing to Harness Unity Bridge
+# Contributing to Agents Unity Bridge
 
-Welcome! We appreciate your interest in contributing to the Harness Unity Bridge. This guide will help you get started.
+Welcome! We appreciate your interest in contributing to the Agents Unity Bridge. This guide will help you get started.
 
 ## How to Contribute
 
@@ -13,8 +13,8 @@ Welcome! We appreciate your interest in contributing to the Harness Unity Bridge
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/your-fork/harness-unity-bridge.git
-   cd harness-unity-bridge
+   git clone https://github.com/your-fork/agents-unity-bridge.git
+   cd agents-unity-bridge
    ```
 
 2. **Install Python dependencies**

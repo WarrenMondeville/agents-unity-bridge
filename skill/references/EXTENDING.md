@@ -1,4 +1,4 @@
-# Extending Harness Unity Bridge
+# Extending Agents Unity Bridge
 
 Learn how to add custom commands to the Unity Bridge for project-specific workflows.
 
@@ -42,7 +42,7 @@ DeepSeek Harness (Python Script)
     ↓ writes
 command.json
     ↓ polls (Unity EditorApplication.update)
-HarnessBridge.cs (Command Dispatcher)
+AgentsBridge.cs (Command Dispatcher)
     ↓ routes to
 ICommand Implementation (YourCustomCommand.cs)
     ↓ writes
@@ -54,7 +54,7 @@ DeepSeek Harness (Python Script)
 **Key Components:**
 
 1. **ICommand Interface** - All commands implement this interface
-2. **HarnessBridge.cs** - Dispatches commands to registered handlers
+2. **AgentsBridge.cs** - Dispatches commands to registered handlers
 3. **CommandRequest** - Input data structure
 4. **CommandResponse** - Output data structure
 5. **Python Script** - Handles command execution (no changes needed!)
@@ -70,11 +70,11 @@ Create `Editor/Commands/YourCommand.cs`:
 ```csharp
 using System;
 using System.Diagnostics;
-using DeepSeekAI.HarnessBridge.Models;
+using UnityBridge.Models;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
 
-namespace DeepSeekAI.HarnessBridge.Commands {
+namespace UnityBridge.Commands {
     public class YourCommand : ICommand {
         public void Execute(
             CommandRequest request,
@@ -83,7 +83,7 @@ namespace DeepSeekAI.HarnessBridge.Commands {
         ) {
             var stopwatch = Stopwatch.StartNew();
 
-            Debug.Log("[HarnessBridge] Executing your custom command");
+            Debug.Log("[AgentsBridge] Executing your custom command");
 
             // Report progress (optional)
             var progressResponse = CommandResponse.Running(request.id, request.action);
@@ -109,7 +109,7 @@ namespace DeepSeekAI.HarnessBridge.Commands {
             }
             catch (Exception e) {
                 stopwatch.Stop();
-                Debug.LogError($"[HarnessBridge] Command failed: {e.Message}");
+                Debug.LogError($"[AgentsBridge] Command failed: {e.Message}");
 
                 onComplete?.Invoke(
                     CommandResponse.Error(request.id, request.action, e.Message)
@@ -126,7 +126,7 @@ namespace DeepSeekAI.HarnessBridge.Commands {
 
 ### Step 2: Register Command
 
-In `Editor/HarnessBridge.cs`, add your command to the dictionary:
+In `Editor/AgentsBridge.cs`, add your command to the dictionary:
 
 ```csharp
 Commands = new Dictionary<string, ICommand> {
@@ -145,7 +145,7 @@ The CLI automatically works with your custom command:
 
 ```bash
 # The script handles all the file I/O, polling, and formatting
-harness-unity-bridge your-command
+agents-unity-bridge your-command
 ```
 
 That's it! Your command is now available through DeepSeek Harness.
@@ -338,13 +338,13 @@ Create a command to build your Unity project for a specific platform:
 using System;
 using System.Diagnostics;
 using System.IO;
-using DeepSeekAI.HarnessBridge.Models;
+using UnityBridge.Models;
 using UnityEditor;
 using UnityEditor.Build.Reporting;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
 
-namespace DeepSeekAI.HarnessBridge.Commands {
+namespace UnityBridge.Commands {
     public class BuildCommand : ICommand {
         public void Execute(
             CommandRequest request,
@@ -357,7 +357,7 @@ namespace DeepSeekAI.HarnessBridge.Commands {
             var platformString = request.@params?.targetPlatform ?? "StandaloneWindows64";
             var isDevelopment = request.@params?.developmentBuild ?? false;
 
-            Debug.Log($"[HarnessBridge] Building for {platformString} (development: {isDevelopment})");
+            Debug.Log($"[AgentsBridge] Building for {platformString} (development: {isDevelopment})");
 
             // Report progress
             var progressResponse = CommandResponse.Running(request.id, request.action);
@@ -384,7 +384,7 @@ namespace DeepSeekAI.HarnessBridge.Commands {
 
                 // Check result
                 if (report.summary.result == BuildResult.Succeeded) {
-                    Debug.Log($"[HarnessBridge] Build succeeded: {report.summary.totalSize} bytes");
+                    Debug.Log($"[AgentsBridge] Build succeeded: {report.summary.totalSize} bytes");
 
                     var response = CommandResponse.Success(
                         request.id,
@@ -403,7 +403,7 @@ namespace DeepSeekAI.HarnessBridge.Commands {
                     onComplete?.Invoke(response);
                 }
                 else {
-                    Debug.LogError($"[HarnessBridge] Build failed: {report.summary.result}");
+                    Debug.LogError($"[AgentsBridge] Build failed: {report.summary.result}");
 
                     var response = CommandResponse.Failure(
                         request.id,
@@ -417,7 +417,7 @@ namespace DeepSeekAI.HarnessBridge.Commands {
             }
             catch (Exception e) {
                 stopwatch.Stop();
-                Debug.LogError($"[HarnessBridge] Build error: {e.Message}");
+                Debug.LogError($"[AgentsBridge] Build error: {e.Message}");
 
                 onComplete?.Invoke(
                     CommandResponse.Error(request.id, request.action, e.Message)
@@ -445,7 +445,7 @@ namespace DeepSeekAI.HarnessBridge.Commands {
 }
 ```
 
-**Register in HarnessBridge.cs:**
+**Register in AgentsBridge.cs:**
 
 ```csharp
 Commands = new Dictionary<string, ICommand> {
@@ -459,7 +459,7 @@ Commands = new Dictionary<string, ICommand> {
 ```bash
 # You'll need to extend the CLI to support --target-platform and --development-build
 # Or create a project-specific wrapper script
-harness-unity-bridge build
+agents-unity-bridge build
 ```
 
 ---
@@ -471,13 +471,13 @@ Load or validate specific scenes:
 ```csharp
 using System;
 using System.Diagnostics;
-using DeepSeekAI.HarnessBridge.Models;
+using UnityBridge.Models;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
 
-namespace DeepSeekAI.HarnessBridge.Commands {
+namespace UnityBridge.Commands {
     public class LoadSceneCommand : ICommand {
         public void Execute(
             CommandRequest request,
@@ -496,14 +496,14 @@ namespace DeepSeekAI.HarnessBridge.Commands {
                 return;
             }
 
-            Debug.Log($"[HarnessBridge] Loading scene: {scenePath}");
+            Debug.Log($"[AgentsBridge] Loading scene: {scenePath}");
 
             try {
                 // Load scene
                 var scene = EditorSceneManager.OpenScene(scenePath, OpenSceneMode.Single);
                 stopwatch.Stop();
 
-                Debug.Log($"[HarnessBridge] Scene loaded: {scene.name}");
+                Debug.Log($"[AgentsBridge] Scene loaded: {scene.name}");
 
                 var response = CommandResponse.Success(
                     request.id,
@@ -523,7 +523,7 @@ namespace DeepSeekAI.HarnessBridge.Commands {
             }
             catch (Exception e) {
                 stopwatch.Stop();
-                Debug.LogError($"[HarnessBridge] Failed to load scene: {e.Message}");
+                Debug.LogError($"[AgentsBridge] Failed to load scene: {e.Message}");
 
                 onComplete?.Invoke(
                     CommandResponse.Error(request.id, request.action, e.Message)
@@ -545,12 +545,12 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using DeepSeekAI.HarnessBridge.Models;
+using UnityBridge.Models;
 using UnityEditor;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
 
-namespace DeepSeekAI.HarnessBridge.Commands {
+namespace UnityBridge.Commands {
     public class ValidateAssetsCommand : ICommand {
         public void Execute(
             CommandRequest request,
@@ -559,7 +559,7 @@ namespace DeepSeekAI.HarnessBridge.Commands {
         ) {
             var stopwatch = Stopwatch.StartNew();
 
-            Debug.Log("[HarnessBridge] Validating assets");
+            Debug.Log("[AgentsBridge] Validating assets");
 
             var progressResponse = CommandResponse.Running(request.id, request.action);
             onProgress?.Invoke(progressResponse);
@@ -603,7 +603,7 @@ namespace DeepSeekAI.HarnessBridge.Commands {
                 stopwatch.Stop();
 
                 if (issues.Count == 0) {
-                    Debug.Log("[HarnessBridge] Asset validation passed");
+                    Debug.Log("[AgentsBridge] Asset validation passed");
 
                     var response = CommandResponse.Success(
                         request.id,
@@ -614,7 +614,7 @@ namespace DeepSeekAI.HarnessBridge.Commands {
                     onComplete?.Invoke(response);
                 }
                 else {
-                    Debug.LogWarning($"[HarnessBridge] Asset validation found {issues.Count} issues");
+                    Debug.LogWarning($"[AgentsBridge] Asset validation found {issues.Count} issues");
 
                     var response = CommandResponse.Failure(
                         request.id,
@@ -637,7 +637,7 @@ namespace DeepSeekAI.HarnessBridge.Commands {
             }
             catch (Exception e) {
                 stopwatch.Stop();
-                Debug.LogError($"[HarnessBridge] Asset validation error: {e.Message}");
+                Debug.LogError($"[AgentsBridge] Asset validation error: {e.Message}");
 
                 onComplete?.Invoke(
                     CommandResponse.Error(request.id, request.action, e.Message)
@@ -686,7 +686,7 @@ public class CIBuildCommand : ICommand {
 unity -batchmode -projectPath . -executeMethod YourCICommand.Execute
 
 # Or use the bridge directly
-harness-unity-bridge ci-build
+agents-unity-bridge ci-build
 ```
 
 ### Pre-Commit Hook
@@ -698,8 +698,8 @@ Validate project before committing:
 # .git/hooks/pre-commit
 
 # Run Unity validation
-harness-unity-bridge validate-assets
-harness-unity-bridge run-tests --mode EditMode
+agents-unity-bridge validate-assets
+agents-unity-bridge run-tests --mode EditMode
 
 if [ $? -ne 0 ]; then
     echo "Tests failed! Fix issues before committing."
@@ -746,7 +746,7 @@ try {
     onComplete?.Invoke(CommandResponse.Success(...));
 }
 catch (Exception e) {
-    Debug.LogError($"[HarnessBridge] Error: {e.Message}");
+    Debug.LogError($"[AgentsBridge] Error: {e.Message}");
     onComplete?.Invoke(CommandResponse.Error(request.id, request.action, e.Message));
 }
 ```
@@ -790,9 +790,9 @@ var response = CommandResponse.Success(
 Help users debug by logging command execution:
 
 ```csharp
-Debug.Log($"[HarnessBridge] Starting {request.action}");
+Debug.Log($"[AgentsBridge] Starting {request.action}");
 // ... operation
-Debug.Log($"[HarnessBridge] Completed {request.action}");
+Debug.Log($"[AgentsBridge] Completed {request.action}");
 ```
 
 ### 5. Validate Parameters
@@ -851,7 +851,7 @@ if (EditorApplication.isPlaying) {
 1. **Write Command File:**
 
 ```bash
-cat > .harness-unity-bridge/command.json << EOF
+cat > .agents-unity-bridge/command.json << EOF
 {
   "id": "test-123",
   "action": "your-command",
@@ -869,7 +869,7 @@ EOF
 3. **Read Response:**
 
 ```bash
-cat .harness-unity-bridge/response-test-123.json
+cat .agents-unity-bridge/response-test-123.json
 ```
 
 ### Via Python Script
@@ -877,7 +877,7 @@ cat .harness-unity-bridge/response-test-123.json
 Once registered, test via the CLI:
 
 ```bash
-harness-unity-bridge your-command --verbose
+agents-unity-bridge your-command --verbose
 ```
 
 The `--verbose` flag shows detailed execution progress.
@@ -947,7 +947,7 @@ elif args.command == "load-scene":
 **Symptom:** "Unknown action: your-command" error
 
 **Solution:**
-1. Check that command is registered in `HarnessBridge.cs`
+1. Check that command is registered in `AgentsBridge.cs`
 2. Verify command name matches exactly (case-sensitive)
 3. Ensure Unity reloaded scripts after adding command
 
@@ -987,7 +987,7 @@ elif args.command == "load-scene":
 Extending the Unity Bridge is straightforward:
 
 1. **Create command class** implementing `ICommand`
-2. **Register command** in `HarnessBridge.cs`
+2. **Register command** in `AgentsBridge.cs`
 3. **Test with CLI** - it automatically handles file I/O
 
 The architecture is designed for extensibility while keeping the core simple and reliable. Your custom commands benefit from the same rock-solid file protocol, error handling, and progress reporting as the built-in commands.
