@@ -2,12 +2,12 @@
 
 ## Project Overview
 
-This is a Unity package (`com.agents-unity-bridge`) that enables DeepSeek Harness to control Unity Editor operations via a file-based protocol. The package has two components:
+This is a Unity package (`com.agents-unity-bridge`) that enables AI agents to control Unity Editor operations via a file-based protocol. The package has two components:
 
 1. **Unity Package** - C# code that runs in Unity Editor, polls for commands, executes them
-2. **DeepSeek Harness Skill** - Python script + documentation that DeepSeek Harness uses to send commands
+2. **AI Agent Skill** - Python script + documentation that AI agents use to send commands
 
-**Key Architecture Decision**: We use a deterministic Python script instead of in-context implementation because it guarantees consistent UUID generation, file handling, polling, and error handling across all DeepSeek Harness sessions.
+**Key Architecture Decision**: We use a deterministic Python script instead of in-context implementation because it guarantees consistent UUID generation, file handling, polling, and error handling across all AI agent sessions.
 
 ## Project Structure
 
@@ -19,7 +19,7 @@ This is a Unity package (`com.agents-unity-bridge`) that enables DeepSeek Harnes
 - `Documentation/` - Package documentation
 - `README.md` - Package documentation and protocol specification
 
-### DeepSeek Harness Skill (skill/)
+### AI Agent Skill (skill/)
 - `src/agents_unity_bridge/cli.py` - **THE CORE** - Handles all command execution
 - `SKILL.md` - Main documentation with YAML frontmatter
 - `references/` - Extended documentation

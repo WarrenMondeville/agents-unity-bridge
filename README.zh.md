@@ -11,7 +11,7 @@
 [![codecov](https://codecov.io/gh/WarrenMondeville/agents-unity-bridge/graph/badge.svg?token=3PHF2GXHON)](https://codecov.io/gh/WarrenMondeville/agents-unity-bridge)
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
 
-一个基于文件协议（file-based）的桥接器，让 **DeepSeek Harness** 能够在**正在运行**的 Unity Editor 实例中触发各类操作。
+一个基于文件协议（file-based）的桥接器，让 **AI 智能体** 能够在**正在运行**的 Unity Editor 实例中触发各类操作。
 
 ## ✨ 功能特性
 
@@ -55,7 +55,7 @@ https://github.com/WarrenMondeville/agents-unity-bridge.git?path=package
 
 ### 3. 使用
 
-在 Unity 工程目录中打开 DeepSeek Harness，直接自然地提出要求即可：
+在 Unity 工程目录中打开你的 AI 智能体，直接自然地提出要求即可：
 
 ```
 “运行 Unity 测试”
@@ -99,10 +99,10 @@ agents-unity-bridge update
 ## ⚙️ 工作原理
 
 ```
-DeepSeek Harness → agents-unity-bridge CLI → .agents-unity-bridge/command.json → Unity Editor → response.json
+AI 智能体 → agents-unity-bridge CLI → .agents-unity-bridge/command.json → Unity Editor → response.json
 ```
 
-1. DeepSeek Harness（或你自己）运行 `agents-unity-bridge` 命令
+1. AI 智能体（或你自己）运行 `agents-unity-bridge` 命令
 2. CLI 把命令写入 `.agents-unity-bridge/command.json`
 3. Unity Editor 轮询并执行该命令
 4. 结果写入 `.agents-unity-bridge/response-{id}.json`
@@ -128,7 +128,7 @@ DeepSeek Harness 通过名为 `unity-bridge` 的技能来“感知”如何操�
 - [安装说明](docs/INSTALLATION.md) — 各种替代安装方式
 - [使用指南](docs/USAGE.md) — 命令格式与响应详情
 - [架构设计](docs/ARCHITECTURE.md) — 项目结构与设计
-- [技能参考](skill/SKILL.md) — DeepSeek Harness 技能文档
+- [技能参考](skill/SKILL.md) — AI 智能体技能文档
 - [命令参考](skill/references/COMMANDS.md) — 完整命令规范
 
 ## 🧩 自定义命令

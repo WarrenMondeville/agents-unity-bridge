@@ -4,7 +4,7 @@
 
 AgentsBridge uses a file-based protocol for communication:
 
-1. **Command File**: DeepSeek Harness writes commands to `.agents-unity-bridge/command.json`
+1. **Command File**: AI agents write commands to `.agents-unity-bridge/command.json`
 2. **Processing**: Unity Editor polls for commands and executes them
 3. **Response File**: Results are written to `.agents-unity-bridge/response-{id}.json`
 
@@ -102,15 +102,15 @@ All commands return a response in this format:
 
 ## Tools Menu
 
-The package adds menu items under `Tools > DeepSeek Harness Bridge`:
+The package adds menu items under `Tools > Unity Bridge`:
 
 - **Show Status** - Display current bridge status in console
 - **Cleanup Old Responses** - Delete response files older than 1 hour
 - **Reset Processing State** - Clear stuck processing state
 
-## Using with DeepSeek Harness
+## Using with AI agents
 
-Once the skill is installed, simply ask DeepSeek Harness naturally:
+Once the skill is installed, simply ask your AI agent naturally:
 
 - "Run the Unity tests in EditMode"
 - "Check if there are any compilation errors"

@@ -185,7 +185,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Initial pre-release of Agents Unity Bridge as a standalone Unity package
-- File-based bridge enabling DeepSeek Harness to trigger Unity Editor operations
+- File-based bridge enabling AI agents to trigger Unity Editor operations
 - `run-tests` command - Execute EditMode or PlayMode tests with filtering
 - `compile` command - Trigger script compilation
 - `refresh` command - Force asset database refresh

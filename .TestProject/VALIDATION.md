@@ -225,6 +225,6 @@ The integration test harness is **ready for use**. When working on Unity Bridge:
 
 ---
 
-**Validation Completed By**: DeepSeek Harness Sonnet 4.5
+**Validation Completed By**: AI agent (Sonnet 4.5)
 **All Tests Passed**: 2026-01-26
 **Integration Harness Status**: Production Ready ✅

@@ -29,7 +29,7 @@ The Unity Bridge ships with 5 core commands that work for any Unity project. How
 - **Project-Specific Tools:** Run custom editor tools or validators
 - **CI/CD Integration:** Automate project-specific build/test workflows
 
-By extending the bridge with custom commands, you can automate these workflows through DeepSeek Harness.
+By extending the bridge with custom commands, you can automate these workflows through AI agents.
 
 ---
 
@@ -38,7 +38,7 @@ By extending the bridge with custom commands, you can automate these workflows t
 The Unity Bridge uses a **Command Pattern** for extensibility:
 
 ```
-DeepSeek Harness (Python Script)
+AI agent (Python Script)
     ↓ writes
 command.json
     ↓ polls (Unity EditorApplication.update)
@@ -48,7 +48,7 @@ ICommand Implementation (YourCustomCommand.cs)
     ↓ writes
 response-{id}.json
     ↓ reads
-DeepSeek Harness (Python Script)
+AI agent (Python Script)
 ```
 
 **Key Components:**
@@ -148,7 +148,7 @@ The CLI automatically works with your custom command:
 agents-unity-bridge your-command
 ```
 
-That's it! Your command is now available through DeepSeek Harness.
+That's it! Your command is now available through AI agents.
 
 ---
 
@@ -753,7 +753,7 @@ catch (Exception e) {
 
 ### 2. Report Progress for Long Operations
 
-Keep DeepSeek Harness informed during long-running operations:
+Keep AI agents informed during long-running operations:
 
 ```csharp
 for (int i = 0; i < totalSteps; i++) {

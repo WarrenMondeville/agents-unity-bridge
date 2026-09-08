@@ -15,7 +15,7 @@
 
 
 
-File-based bridge enabling DeepSeek Harness to trigger Unity Editor operations in a running editor instance.
+File-based bridge enabling AI agents to trigger Unity Editor operations in a running editor instance.
 
 ## ✨ Features
 
@@ -54,7 +54,7 @@ https://github.com/WarrenMondeville/agents-unity-bridge.git?path=package
 
 ### 3. Use It
 
-Open DeepSeek Harness in your Unity project directory:
+Open your AI agent in your Unity project directory:
 
 ```
 "Run the Unity tests"
@@ -79,10 +79,10 @@ agents-unity-bridge update
 ## ⚙️ How It Works
 
 ```
-DeepSeek Harness → agents-unity-bridge CLI → .agents-unity-bridge/command.json → Unity Editor → response.json
+AI agents → agents-unity-bridge CLI → .agents-unity-bridge/command.json → Unity Editor → response.json
 ```
 
-1. DeepSeek Harness (or you) runs `agents-unity-bridge` commands
+1. AI agent (or you) runs `agents-unity-bridge` commands
 2. The CLI writes commands to `.agents-unity-bridge/command.json`
 3. Unity Editor polls and executes commands
 4. Results appear in `.agents-unity-bridge/response-{id}.json`
@@ -94,5 +94,5 @@ Each Unity project has its own `.agents-unity-bridge/` directory, enabling multi
 - [Installation Options](docs/INSTALLATION.md) — Alternative installation methods
 - [Usage Guide](docs/USAGE.md) — Command formats and response details
 - [Architecture](docs/ARCHITECTURE.md) — Project structure and design
-- [Skill Reference](skill/SKILL.md) — DeepSeek Harness skill documentation
+- [Skill Reference](skill/SKILL.md) — AI agent skill documentation
 - [Command Reference](skill/references/COMMANDS.md) — Complete command specification

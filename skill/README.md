@@ -8,12 +8,12 @@
 [![Unity 2021.3+](https://img.shields.io/badge/Unity-2021.3%2B-black.svg)](https://unity.com/)
 [![PyPI Downloads](https://img.shields.io/pypi/dm/agents-unity-bridge)](https://pypi.org/project/agents-unity-bridge/)
 
-> File-based bridge enabling DeepSeek Harness to control Unity Editor operations in a running editor instance.
+> File-based bridge enabling AI agents to control Unity Editor operations in a running editor instance.
 
 ## Why Agents Unity Bridge?
 
 - **Zero config** — No network setup, no port conflicts. Just install and go.
-- **Deterministic CLI** — Tested Python script handles UUIDs, polling, retries, and cleanup so DeepSeek Harness doesn't have to.
+- **Deterministic CLI** — Tested Python script handles UUIDs, polling, retries, and cleanup so AI agents don't have to.
 - **Multi-project** — Each Unity project gets its own `.agents-unity-bridge/` directory. Work on multiple projects simultaneously.
 - **Full editor control** — Run tests, compile, check logs, refresh assets, build, and control Play Mode.
 - **Cross-platform** — macOS, Linux, and Windows support.
@@ -47,7 +47,7 @@ https://github.com/WarrenMondeville/agents-unity-bridge.git?path=package
 
 ## Quick Start
 
-Open DeepSeek Harness in your Unity project directory and ask naturally:
+Open your AI agent in your Unity project directory and ask naturally:
 
 ```
 "Run the Unity tests"
@@ -81,14 +81,14 @@ agents-unity-bridge build --target Android
 ## How It Works
 
 ```
-DeepSeek Harness  -->  agents-unity-bridge CLI  -->  .agents-unity-bridge/command.json
+AI agent  -->  agents-unity-bridge CLI  -->  .agents-unity-bridge/command.json
                                                   |
                                             Unity Editor
                                                   |
-DeepSeek Harness  <--  agents-unity-bridge CLI  <--  .agents-unity-bridge/response-{id}.json
+AI agent  <--  agents-unity-bridge CLI  <--  .agents-unity-bridge/response-{id}.json
 ```
 
-1. DeepSeek Harness (or you) runs a `agents-unity-bridge` command
+1. AI agent (or you) runs a `agents-unity-bridge` command
 2. The CLI writes a JSON command with a unique UUID
 3. Unity Editor polls for and executes the command
 4. The CLI polls for the response with exponential backoff

@@ -29,7 +29,7 @@ package/                     # Unity package (UPM)
 │       └── CommandResponse.cs   # Response DTO
 └── Tests/                   # Unity tests
 
-skill/                       # DeepSeek Harness skill (Python)
+skill/                       # AI agent skill (Python)
 ├── src/
 │   └── agents_unity_bridge/
 │       └── cli.py           # Deterministic command script
