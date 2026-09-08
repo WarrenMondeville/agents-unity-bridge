@@ -5,11 +5,9 @@
 ![Unity 2021.3+](https://img.shields.io/badge/Unity-2021.3%2B-black.svg)
 ![Python 3.8+](https://img.shields.io/badge/Python-3.8%2B-blue.svg)
 
-[![PyPI](https://img.shields.io/pypi/v/agents-unity-bridge)](https://pypi.org/project/agents-unity-bridge/)
 [![GitHub release](https://img.shields.io/github/v/release/WarrenMondeville/agents-unity-bridge)](https://github.com/WarrenMondeville/agents-unity-bridge/releases)
 [![CI](https://github.com/WarrenMondeville/agents-unity-bridge/actions/workflows/test-skill.yml/badge.svg)](https://github.com/WarrenMondeville/agents-unity-bridge/actions/workflows/test-skill.yml)
 
-[![PyPI Downloads](https://img.shields.io/pypi/dm/agents-unity-bridge)](https://pypi.org/project/agents-unity-bridge/)
 [![codecov](https://codecov.io/gh/WarrenMondeville/agents-unity-bridge/graph/badge.svg?token=3PHF2GXHON)](https://codecov.io/gh/WarrenMondeville/agents-unity-bridge)
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
 

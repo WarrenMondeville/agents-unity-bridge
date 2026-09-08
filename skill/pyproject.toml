@@ -43,7 +43,6 @@ Homepage = "https://github.com/WarrenMondeville/agents-unity-bridge"
 Repository = "https://github.com/WarrenMondeville/agents-unity-bridge"
 Issues = "https://github.com/WarrenMondeville/agents-unity-bridge/issues"
 Changelog = "https://github.com/WarrenMondeville/agents-unity-bridge/releases"
-PyPI = "https://pypi.org/project/agents-unity-bridge/"
 
 [project.scripts]
 agents-unity-bridge = "agents_unity_bridge.cli:main"
