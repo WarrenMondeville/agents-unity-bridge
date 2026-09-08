@@ -28,27 +28,26 @@
 
 ## 🚀 快速开始
 
-### 1. 安装
-
-**手动安装：**
-
-```bash
-# 1. 安装 Python CLI 包
-pip install agents-unity-bridge
-
-# 2. 安装 DeepSeek Harness 技能（可选）
-agents-unity-bridge install-skill
-```
-
-> 如果 `agents-unity-bridge` 命令不在 PATH 中，可用 `python -m agents_unity_bridge.cli` 代替。
-
-### 2. 添加到你的 Unity 工程
+### 1. 添加 Unity 包
 
 在 Unity 中：`Window > Package Manager > + > Add package from git URL...`
 
 ```
 https://github.com/WarrenMondeville/agents-unity-bridge.git?path=package
 ```
+
+### 2. 安装 CLI 和技能
+
+在 Unity 中打开 `Tools > Unity Bridge > Open Installer`，然后点击 **Install Python CLI** 和 **Install Skill**。
+
+或在终端手动安装：
+
+```bash
+pip install agents-unity-bridge
+agents-unity-bridge install-skill
+```
+
+> 如果 `agents-unity-bridge` 命令不在 PATH 中，可用 `python -m agents_unity_bridge.cli` 代替。
 
 ### 3. 使用
 

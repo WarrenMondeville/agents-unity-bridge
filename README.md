@@ -32,27 +32,26 @@ File-based bridge enabling AI agents to trigger Unity Editor operations in a run
 
 ## 🚀 Quick Start
 
-### 1. Install
-
-**Manual install:**
-
-```bash
-# 1. Install the Python CLI
-pip install agents-unity-bridge
-
-# 2. Install the DeepSeek Harness skill (optional)
-agents-unity-bridge install-skill
-```
-
-> If `agents-unity-bridge` is not on your PATH, use `python -m agents_unity_bridge.cli` instead.
-
-### 2. Add to Your Unity Project(s)
+### 1. Add the Unity Package
 
 In Unity: `Window > Package Manager > + > Add package from git URL...`
 
 ```
 https://github.com/WarrenMondeville/agents-unity-bridge.git?path=package
 ```
+
+### 2. Install the CLI & Skill
+
+In Unity, open `Tools > Unity Bridge > Open Installer`, then click **Install Python CLI** and **Install Skill**.
+
+Or install manually from a terminal:
+
+```bash
+pip install agents-unity-bridge
+agents-unity-bridge install-skill
+```
+
+> If `agents-unity-bridge` is not on your PATH, use `python -m agents_unity_bridge.cli` instead.
 
 ### 3. Use It
 

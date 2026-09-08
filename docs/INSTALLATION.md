@@ -5,7 +5,17 @@
 - Unity 2021.3 or later
 - Python 3.8 or later (for the CLI)
 
-## Install
+## Install from Unity (Recommended)
+
+After adding the Unity package, you can install the Python CLI and the skill without leaving the editor:
+
+1. In Unity, open `Tools > Unity Bridge > Open Installer`
+2. Click **Install Python CLI**
+3. Click **Install Skill**
+
+The installer detects Python 3 on PATH and runs the same `pip install` / `install-skill` steps automatically. Results are shown in the Unity Console and in the installer window.
+
+## Install (Manual)
 
 ### 1. Install the Python CLI
 
