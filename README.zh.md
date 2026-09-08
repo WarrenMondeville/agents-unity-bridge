@@ -3,12 +3,12 @@
 ![Unity 2021.3+](https://img.shields.io/badge/Unity-2021.3%2B-black.svg)
 ![Python 3.8+](https://img.shields.io/badge/Python-3.8%2B-blue.svg)
 
-[![PyPI](https://img.shields.io/pypi/v/harness-unity-bridge)](https://pypi.org/project/harness-unity-bridge/)
-[![GitHub release](https://img.shields.io/github/v/release/WarrenMondeville/harness-unity-bridge)](https://github.com/WarrenMondeville/harness-unity-bridge/releases)
-[![CI](https://github.com/WarrenMondeville/harness-unity-bridge/actions/workflows/test-skill.yml/badge.svg)](https://github.com/WarrenMondeville/harness-unity-bridge/actions/workflows/test-skill.yml)
+[![PyPI](https://img.shields.io/pypi/v/agents-unity-bridge)](https://pypi.org/project/agents-unity-bridge/)
+[![GitHub release](https://img.shields.io/github/v/release/WarrenMondeville/agents-unity-bridge)](https://github.com/WarrenMondeville/agents-unity-bridge/releases)
+[![CI](https://github.com/WarrenMondeville/agents-unity-bridge/actions/workflows/test-skill.yml/badge.svg)](https://github.com/WarrenMondeville/agents-unity-bridge/actions/workflows/test-skill.yml)
 
-[![PyPI Downloads](https://img.shields.io/pypi/dm/harness-unity-bridge)](https://pypi.org/project/harness-unity-bridge/)
-[![codecov](https://codecov.io/gh/WarrenMondeville/harness-unity-bridge/graph/badge.svg?token=3PHF2GXHON)](https://codecov.io/gh/WarrenMondeville/harness-unity-bridge)
+[![PyPI Downloads](https://img.shields.io/pypi/dm/agents-unity-bridge)](https://pypi.org/project/agents-unity-bridge/)
+[![codecov](https://codecov.io/gh/WarrenMondeville/agents-unity-bridge/graph/badge.svg?token=3PHF2GXHON)](https://codecov.io/gh/WarrenMondeville/agents-unity-bridge)
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
 
 一个基于文件协议（file-based）的桥接器，让 **DeepSeek Harness** 能够在**正在运行**的 Unity Editor 实例中触发各类操作。
@@ -32,12 +32,12 @@
 
 **macOS / Linux / Git Bash：**
 ```bash
-curl -sSL https://raw.githubusercontent.com/WarrenMondeville/harness-unity-bridge/main/install.sh | bash
+curl -sSL https://raw.githubusercontent.com/WarrenMondeville/agents-unity-bridge/main/install.sh | bash
 ```
 
 **Windows（PowerShell）：**
 ```powershell
-irm https://raw.githubusercontent.com/WarrenMondeville/harness-unity-bridge/main/install.ps1 | iex
+irm https://raw.githubusercontent.com/WarrenMondeville/agents-unity-bridge/main/install.ps1 | iex
 ```
 
 安装脚本会完成以下事情：
@@ -50,7 +50,7 @@ irm https://raw.githubusercontent.com/WarrenMondeville/harness-unity-bridge/main
 在 Unity 中：`Window > Package Manager > + > Add package from git URL...`
 
 ```
-https://github.com/WarrenMondeville/harness-unity-bridge.git?path=package
+https://github.com/WarrenMondeville/agents-unity-bridge.git?path=package
 ```
 
 ### 3. 使用

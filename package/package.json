@@ -4,7 +4,7 @@
   "displayName": "Agents Unity Bridge",
   "description": "File-based bridge enabling AI agents to trigger Unity Editor operations (tests, compile, refresh, build, asset dependency analysis, prefab management, asset inspector dump) in a running editor instance.",
   "unity": "2021.3",
-  "documentationUrl": "https://github.com/WarrenMondeville/harness-unity-bridge",
+  "documentationUrl": "https://github.com/WarrenMondeville/agents-unity-bridge",
   "dependencies": {},
   "keywords": [
     "agent",
@@ -16,6 +16,6 @@
   ],
   "author": {
       "name": "Agents Unity Bridge",
-      "url": "https://github.com/WarrenMondeville/harness-unity-bridge"
+      "url": "https://github.com/WarrenMondeville/agents-unity-bridge"
   }
 }

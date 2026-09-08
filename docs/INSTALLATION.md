@@ -10,13 +10,13 @@
 ### macOS / Linux / Git Bash
 
 ```bash
-curl -sSL https://raw.githubusercontent.com/WarrenMondeville/harness-unity-bridge/main/install.sh | bash
+curl -sSL https://raw.githubusercontent.com/WarrenMondeville/agents-unity-bridge/main/install.sh | bash
 ```
 
 ### Windows (PowerShell)
 
 ```powershell
-irm https://raw.githubusercontent.com/WarrenMondeville/harness-unity-bridge/main/install.ps1 | iex
+irm https://raw.githubusercontent.com/WarrenMondeville/agents-unity-bridge/main/install.ps1 | iex
 ```
 
 Both installers:
@@ -50,7 +50,7 @@ agents-unity-bridge health-check
 2. Go to `Window > Package Manager`
 3. Click the `+` button in the top-left corner
 4. Select `Add package from git URL...`
-5. Enter: `https://github.com/WarrenMondeville/harness-unity-bridge.git?path=package`
+5. Enter: `https://github.com/WarrenMondeville/agents-unity-bridge.git?path=package`
 6. Click `Add`
 
 ### Via Package Manager (Local Path)
@@ -72,7 +72,7 @@ Add this line to your project's `Packages/manifest.json`:
 ```json
 {
   "dependencies": {
-    "com.agents-unity-bridge": "https://github.com/WarrenMondeville/harness-unity-bridge.git?path=package"
+    "com.agents-unity-bridge": "https://github.com/WarrenMondeville/agents-unity-bridge.git?path=package"
   }
 }
 ```
@@ -136,7 +136,7 @@ pip uninstall agents-unity-bridge
 For contributing to the project:
 
 ```bash
-git clone https://github.com/WarrenMondeville/harness-unity-bridge.git
+git clone https://github.com/WarrenMondeville/agents-unity-bridge.git
 cd agents-unity-bridge/skill
 pip install -e ".[dev]"
 agents-unity-bridge install-skill

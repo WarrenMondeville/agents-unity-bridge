@@ -1,7 +1,7 @@
 # Agents Unity Bridge - Quick Installer (PowerShell)
 #
 # Usage:
-#   irm https://raw.githubusercontent.com/WarrenMondeville/harness-unity-bridge/main/install.ps1 | iex
+#   irm https://raw.githubusercontent.com/WarrenMondeville/agents-unity-bridge/main/install.ps1 | iex
 #
 # Or download and run:
 #   .\install.ps1
@@ -79,7 +79,7 @@ Write-Host ""
 Write-Host "Next steps:" -ForegroundColor Cyan
 Write-Host "  1. Add the Unity package to your project:"
 Write-Host "     Window > Package Manager > + > Add package from git URL..."
-Write-Host "     https://github.com/WarrenMondeville/harness-unity-bridge.git?path=package"
+Write-Host "     https://github.com/WarrenMondeville/agents-unity-bridge.git?path=package"
 Write-Host ""
 Write-Host "  2. Open DeepSeek Harness in your Unity project directory"
 Write-Host ""

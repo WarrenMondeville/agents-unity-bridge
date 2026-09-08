@@ -2,7 +2,7 @@
 # Agents Unity Bridge - Quick Installer
 #
 # Usage:
-#   curl -sSL https://raw.githubusercontent.com/WarrenMondeville/harness-unity-bridge/main/install.sh | bash
+#   curl -sSL https://raw.githubusercontent.com/WarrenMondeville/agents-unity-bridge/main/install.sh | bash
 #
 # Or download and run:
 #   ./install.sh
@@ -59,7 +59,7 @@ echo
 echo "Next steps:"
 echo "  1. Add the Unity package to your project:"
 echo "     Window > Package Manager > + > Add package from git URL..."
-echo "     https://github.com/WarrenMondeville/harness-unity-bridge.git?path=package"
+echo "     https://github.com/WarrenMondeville/agents-unity-bridge.git?path=package"
 echo
 echo "  2. Open DeepSeek Harness in your Unity project directory"
 echo

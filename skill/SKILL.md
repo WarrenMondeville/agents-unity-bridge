@@ -35,7 +35,7 @@ The Unity Bridge enables DeepSeek Harness to trigger operations in a running Uni
 ## Requirements
 
 1. **Unity Package:** Install `com.agents-unity-bridge` in your Unity project
-   - Via Package Manager: `https://github.com/WarrenMondeville/harness-unity-bridge.git?path=package`
+   - Via Package Manager: `https://github.com/WarrenMondeville/agents-unity-bridge.git?path=package`
    - See main package README for installation instructions
 
 2. **Unity Editor:** Must be open with your project loaded
@@ -679,5 +679,5 @@ The skill uses a CLI tool instead of implementing the protocol directly in DeepS
 ## Support
 
 For issues or questions:
-- Package Issues: https://github.com/WarrenMondeville/harness-unity-bridge/issues
+- Package Issues: https://github.com/WarrenMondeville/agents-unity-bridge/issues
 - Skill Issues: Report in the same repository with `[Skill]` prefix

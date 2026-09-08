@@ -1,12 +1,12 @@
 # Agents Unity Bridge
 
-[![PyPI](https://img.shields.io/pypi/v/harness-unity-bridge)](https://pypi.org/project/harness-unity-bridge/)
-[![Python 3.8+](https://img.shields.io/pypi/pyversions/agents-unity-bridge)](https://pypi.org/project/harness-unity-bridge/)
-[![CI](https://github.com/WarrenMondeville/harness-unity-bridge/actions/workflows/test-skill.yml/badge.svg)](https://github.com/WarrenMondeville/harness-unity-bridge/actions/workflows/test-skill.yml)
-[![codecov](https://codecov.io/gh/WarrenMondeville/harness-unity-bridge/graph/badge.svg?token=3PHF2GXHON)](https://codecov.io/gh/WarrenMondeville/harness-unity-bridge)
-[![License: Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://github.com/WarrenMondeville/harness-unity-bridge/blob/main/LICENSE)
+[![PyPI](https://img.shields.io/pypi/v/agents-unity-bridge)](https://pypi.org/project/agents-unity-bridge/)
+[![Python 3.8+](https://img.shields.io/pypi/pyversions/agents-unity-bridge)](https://pypi.org/project/agents-unity-bridge/)
+[![CI](https://github.com/WarrenMondeville/agents-unity-bridge/actions/workflows/test-skill.yml/badge.svg)](https://github.com/WarrenMondeville/agents-unity-bridge/actions/workflows/test-skill.yml)
+[![codecov](https://codecov.io/gh/WarrenMondeville/agents-unity-bridge/graph/badge.svg?token=3PHF2GXHON)](https://codecov.io/gh/WarrenMondeville/agents-unity-bridge)
+[![License: Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://github.com/WarrenMondeville/agents-unity-bridge/blob/main/LICENSE)
 [![Unity 2021.3+](https://img.shields.io/badge/Unity-2021.3%2B-black.svg)](https://unity.com/)
-[![PyPI Downloads](https://img.shields.io/pypi/dm/harness-unity-bridge)](https://pypi.org/project/harness-unity-bridge/)
+[![PyPI Downloads](https://img.shields.io/pypi/dm/agents-unity-bridge)](https://pypi.org/project/agents-unity-bridge/)
 
 > File-based bridge enabling DeepSeek Harness to control Unity Editor operations in a running editor instance.
 
@@ -31,10 +31,10 @@ Or use the one-line installer:
 
 ```bash
 # macOS / Linux / Git Bash
-curl -sSL https://raw.githubusercontent.com/WarrenMondeville/harness-unity-bridge/main/install.sh | bash
+curl -sSL https://raw.githubusercontent.com/WarrenMondeville/agents-unity-bridge/main/install.sh | bash
 
 # Windows (PowerShell)
-irm https://raw.githubusercontent.com/WarrenMondeville/harness-unity-bridge/main/install.ps1 | iex
+irm https://raw.githubusercontent.com/WarrenMondeville/agents-unity-bridge/main/install.ps1 | iex
 ```
 
 **Add the Unity package** (in Unity Editor):
@@ -42,7 +42,7 @@ irm https://raw.githubusercontent.com/WarrenMondeville/harness-unity-bridge/main
 `Window > Package Manager > + > Add package from git URL...`
 
 ```
-https://github.com/WarrenMondeville/harness-unity-bridge.git?path=package
+https://github.com/WarrenMondeville/agents-unity-bridge.git?path=package
 ```
 
 ## Quick Start
@@ -104,11 +104,11 @@ agents-unity-bridge update
 
 ## Documentation
 
-- [Installation Options](https://github.com/WarrenMondeville/harness-unity-bridge/blob/main/docs/INSTALLATION.md) — Alternative installation methods
-- [Usage Guide](https://github.com/WarrenMondeville/harness-unity-bridge/blob/main/docs/USAGE.md) — Command formats and response details
-- [Architecture](https://github.com/WarrenMondeville/harness-unity-bridge/blob/main/docs/ARCHITECTURE.md) — Project structure and design
-- [Command Reference](https://github.com/WarrenMondeville/harness-unity-bridge/blob/main/skill/references/COMMANDS.md) — Complete command specification
+- [Installation Options](https://github.com/WarrenMondeville/agents-unity-bridge/blob/main/docs/INSTALLATION.md) — Alternative installation methods
+- [Usage Guide](https://github.com/WarrenMondeville/agents-unity-bridge/blob/main/docs/USAGE.md) — Command formats and response details
+- [Architecture](https://github.com/WarrenMondeville/agents-unity-bridge/blob/main/docs/ARCHITECTURE.md) — Project structure and design
+- [Command Reference](https://github.com/WarrenMondeville/agents-unity-bridge/blob/main/skill/references/COMMANDS.md) — Complete command specification
 
 ## License
 
-[Apache 2.0](https://github.com/WarrenMondeville/harness-unity-bridge/blob/main/LICENSE)
+[Apache 2.0](https://github.com/WarrenMondeville/agents-unity-bridge/blob/main/LICENSE)
