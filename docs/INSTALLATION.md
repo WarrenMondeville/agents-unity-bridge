@@ -5,35 +5,27 @@
 - Unity 2021.3 or later
 - Python 3.8 or later (for the CLI)
 
-## Quick Install
+## Install
 
-### macOS / Linux / Git Bash
-
-```bash
-curl -sSL https://raw.githubusercontent.com/WarrenMondeville/agents-unity-bridge/main/install.sh | bash
-```
-
-### Windows (PowerShell)
-
-```powershell
-irm https://raw.githubusercontent.com/WarrenMondeville/agents-unity-bridge/main/install.ps1 | iex
-```
-
-Both installers:
-- Install the `agents-unity-bridge` pip package
-- Add Python scripts directory to your PATH
-- Install the DeepSeek Harness skill
-
-**Windows Note:** On Windows without Developer Mode, the skill is installed as a directory copy instead of a symlink. This works seamlessly, but updates require re-running `agents-unity-bridge install-skill`.
-
-## Manual Install
-
-If you prefer not to use curl, or need more control:
+### 1. Install the Python CLI
 
 ```bash
 pip install agents-unity-bridge
+```
+
+If `agents-unity-bridge` is not on your PATH, you can use the module directly:
+
+```bash
+python -m agents_unity_bridge.cli --help
+```
+
+### 2. Install the Skill (optional, for DeepSeek Harness)
+
+```bash
 agents-unity-bridge install-skill
 ```
+
+**Windows Note:** On Windows without Developer Mode, the skill is installed as a directory copy instead of a symlink. This works seamlessly, but updates require re-running `agents-unity-bridge install-skill`.
 
 ## Verify Installation
 
@@ -157,7 +149,7 @@ On Windows, creating symlinks requires either:
 - Administrator privileges, or
 - Developer Mode enabled
 
-If you see `[WinError 1314] A required privilege is not held by the client`, the installer will automatically fall back to copying the skill directory. This works perfectly fine, but updates require re-running `agents-unity-bridge install-skill`.
+If you see `[WinError 1314] A required privilege is not held by the client`, install-skill will automatically fall back to copying the skill directory. This works perfectly fine, but updates require re-running `agents-unity-bridge install-skill`.
 
 **To enable symlinks (optional):**
 1. Open Settings > Update & Security > For developers

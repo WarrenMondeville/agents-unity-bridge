@@ -34,15 +34,17 @@ File-based bridge enabling AI agents to trigger Unity Editor operations in a run
 
 ### 1. Install
 
-**macOS / Linux / Git Bash:**
+**Manual install:**
+
 ```bash
-curl -sSL https://raw.githubusercontent.com/WarrenMondeville/agents-unity-bridge/main/install.sh | bash
+# 1. Install the Python CLI
+pip install agents-unity-bridge
+
+# 2. Install the DeepSeek Harness skill (optional)
+agents-unity-bridge install-skill
 ```
 
-**Windows (PowerShell):**
-```powershell
-irm https://raw.githubusercontent.com/WarrenMondeville/agents-unity-bridge/main/install.ps1 | iex
-```
+> If `agents-unity-bridge` is not on your PATH, use `python -m agents_unity_bridge.cli` instead.
 
 ### 2. Add to Your Unity Project(s)
 

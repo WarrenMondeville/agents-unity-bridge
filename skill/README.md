@@ -27,16 +27,6 @@ pip install agents-unity-bridge
 agents-unity-bridge install-skill
 ```
 
-Or use the one-line installer:
-
-```bash
-# macOS / Linux / Git Bash
-curl -sSL https://raw.githubusercontent.com/WarrenMondeville/agents-unity-bridge/main/install.sh | bash
-
-# Windows (PowerShell)
-irm https://raw.githubusercontent.com/WarrenMondeville/agents-unity-bridge/main/install.ps1 | iex
-```
-
 **Add the Unity package** (in Unity Editor):
 
 `Window > Package Manager > + > Add package from git URL...`
