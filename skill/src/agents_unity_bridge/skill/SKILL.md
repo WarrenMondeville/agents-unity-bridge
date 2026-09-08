@@ -620,7 +620,7 @@ For more information, see:
 ### Quick Install
 
 ```bash
-pip install agents-unity-bridge
+pip install "git+https://github.com/WarrenMondeville/agents-unity-bridge.git#subdirectory=skill"
 agents-unity-bridge install-skill
 ```
 

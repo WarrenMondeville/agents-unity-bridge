@@ -14,6 +14,7 @@ namespace UnityBridge {
     /// </summary>
     public class AgentsBridgeInstaller : EditorWindow {
         private const string PipPackage = "agents-unity-bridge";
+        private const string PipInstallSource = "git+https://github.com/WarrenMondeville/agents-unity-bridge.git#subdirectory=skill";
         private const string MenuRoot = "Tools/Unity Bridge/";
 
         private static string _lastLog = "";
@@ -36,7 +37,7 @@ namespace UnityBridge {
                 ReportError("Python 3 was not found. Install Python 3.8+ and try again.");
                 return;
             }
-            RunCommand($"Install Python CLI ({PipPackage})", python, $"-m pip install --user --upgrade {PipPackage}");
+            RunCommand($"Install Python CLI ({PipPackage})", python, $"-m pip install --user --upgrade {PipInstallSource}");
         }
 
         [MenuItem(MenuRoot + "Install Skill")]
@@ -61,7 +62,7 @@ namespace UnityBridge {
             EditorGUILayout.HelpBox(
                 "Install the companion Python CLI and the DeepSeek Harness skill from inside Unity. " +
                 "This is equivalent to running the following commands manually:\n" +
-                $"  pip install {PipPackage}\n" +
+                $"  pip install \"{PipInstallSource}\"\n" +
                 $"  {PipPackage} install-skill",
                 MessageType.Info);
 

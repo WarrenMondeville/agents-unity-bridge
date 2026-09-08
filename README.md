@@ -47,7 +47,7 @@ In Unity, open `Tools > Unity Bridge > Open Installer`, then click **Install Pyt
 Or install manually from a terminal:
 
 ```bash
-pip install agents-unity-bridge
+pip install "git+https://github.com/WarrenMondeville/agents-unity-bridge.git#subdirectory=skill"
 agents-unity-bridge install-skill
 ```
 

@@ -20,7 +20,7 @@ The installer detects Python 3 on PATH and runs the same `pip install` / `instal
 ### 1. Install the Python CLI
 
 ```bash
-pip install agents-unity-bridge
+pip install "git+https://github.com/WarrenMondeville/agents-unity-bridge.git#subdirectory=skill"
 ```
 
 If `agents-unity-bridge` is not on your PATH, you can use the module directly:
@@ -117,12 +117,12 @@ agents-unity-bridge health-check
 agents-unity-bridge update
 ```
 
-This runs `pip install --upgrade agents-unity-bridge` and reinstalls the skill to ensure the symlink points to the updated package.
+This runs `pip install --upgrade "git+https://github.com/WarrenMondeville/agents-unity-bridge.git#subdirectory=skill"` and reinstalls the skill to ensure the symlink points to the updated package.
 
 Or manually:
 
 ```bash
-pip install --upgrade agents-unity-bridge
+pip install --upgrade "git+https://github.com/WarrenMondeville/agents-unity-bridge.git#subdirectory=skill"
 agents-unity-bridge install-skill
 ```
 

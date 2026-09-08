@@ -1025,7 +1025,7 @@ def install_skill(verbose: bool = False) -> int:
         print("Error: Could not find skill files in package.", file=sys.stderr)
         print("This may indicate a corrupted installation.", file=sys.stderr)
         print(
-            "Try reinstalling: pip install --force-reinstall agents-unity-bridge",
+            "Try reinstalling: pip install --force-reinstall \"git+https://github.com/WarrenMondeville/agents-unity-bridge.git#subdirectory=skill\"",
             file=sys.stderr,
         )
         return EXIT_ERROR
@@ -1208,7 +1208,7 @@ def update_package(verbose: bool = False) -> int:
                 "pip",
                 "install",
                 "--upgrade",
-                "agents-unity-bridge",
+                "git+https://github.com/WarrenMondeville/agents-unity-bridge.git#subdirectory=skill",
             ],
             capture_output=not verbose,
             text=True,
