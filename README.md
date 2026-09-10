@@ -28,6 +28,16 @@ File-based bridge enabling AI agents to trigger Unity Editor operations in a run
 - **Prefab Management** — Inspect prefab metadata and hierarchy, create prefabs from scene objects
 - **Asset Inspector Dump** — Dump Inspector-visible serialized field values of prefabs, assets, and scenes
 
+## 🤖 Agent Installation
+
+Give an AI agent this repo link and it installs everything automatically:
+
+```
+https://github.com/WarrenMondeville/agents-unity-bridge
+```
+
+The agent reads the [Installation guide](skill/SKILL.md#installation) and runs the install commands (pip install + install-skill) on its own. The Unity package itself is added inside the Unity Editor (see Quick Start below).
+
 ## 🚀 Quick Start
 
 ### 1. Add the Unity Package

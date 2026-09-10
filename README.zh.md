@@ -24,6 +24,16 @@
 - **预制体管理** — 查看预制体元信息与层级，从场景对象创建预制体
 - **资源字段导出** — 导出预制体/资源/场景的 Inspector 可见序列化字段值
 
+## 🤖 智能体安装
+
+给智能体这个仓库链接，它就能自动完成安装：
+
+```
+https://github.com/WarrenMondeville/agents-unity-bridge
+```
+
+智能体会读取[安装说明](skill/SKILL.md#installation)并自动执行安装命令（pip install + install-skill）。Unity 包本身需要在 Unity 编辑器里添加（见下方快速开始）。
+
 ## 🚀 快速开始
 
 ### 1. 添加 Unity 包

@@ -617,19 +617,38 @@ For more information, see:
 
 ## Installation
 
-### Quick Install
+### 🤖 Agent Installation (one link, automated)
+
+An AI agent can install everything automatically from a single link. Give the agent the repo URL and it runs:
 
 ```bash
+# 1. Verify Python 3.8+
+python3 --version
+
+# 2. Install the CLI (from GitHub)
 pip install "git+https://github.com/WarrenMondeville/agents-unity-bridge.git#subdirectory=skill"
+
+# 3. Install the DeepSeek Harness skill
 agents-unity-bridge install-skill
+
+# 4. Verify the bridge is ready
+agents-unity-bridge health-check
 ```
 
-This installs the CLI and the DeepSeek Harness skill.
+### Unity Package
 
-### Verify Setup
+Install the Unity package in the Unity Editor:
 
-```bash
-agents-unity-bridge health-check
+`Window > Package Manager > + > Add package from git URL...`
+
+```
+https://github.com/WarrenMondeville/agents-unity-bridge.git?path=package
+```
+
+Or add it directly to the project's `Packages/manifest.json`:
+
+```json
+"com.agents-unity-bridge": "https://github.com/WarrenMondeville/agents-unity-bridge.git?path=package"
 ```
 
 ### Updating
@@ -638,7 +657,7 @@ agents-unity-bridge health-check
 agents-unity-bridge update
 ```
 
-This upgrades the pip package and reinstalls the skill.
+This upgrades the pip package (from GitHub) and reinstalls the skill.
 
 ### Uninstalling
 
