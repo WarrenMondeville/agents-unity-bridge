@@ -8,9 +8,11 @@ using Debug = UnityEngine.Debug;
 
 namespace UnityBridge {
     /// <summary>
-    /// Installs the companion Python CLI and the DeepSeek Harness skill from inside the
-    /// Unity Editor. This mirrors how Unity MCP plugins bootstrap their external tooling:
-    /// install the Unity package first, then run the installer from a menu / window.
+    /// Installs the companion Python CLI and the agent skill/rules from inside the
+    /// Unity Editor. "Install Skill" supports mainstream AI agents (DeepSeek Harness,
+    /// Claude Code, Cursor, Windsurf, Cline). This mirrors how Unity MCP plugins
+    /// bootstrap their external tooling: install the Unity package first, then run the
+    /// installer from a menu / window.
     /// </summary>
     public class AgentsBridgeInstaller : EditorWindow {
         private const string PipPackage = "agents-unity-bridge";
@@ -60,8 +62,9 @@ namespace UnityBridge {
             EditorGUILayout.Space();
             EditorGUILayout.LabelField("Unity Bridge Installer", EditorStyles.boldLabel);
             EditorGUILayout.HelpBox(
-                "Install the companion Python CLI and the DeepSeek Harness skill from inside Unity. " +
-                "This is equivalent to running the following commands manually:\n" +
+                "Install the companion Python CLI and the agent skill/rules from inside Unity. " +
+                "\"Install Skill\" covers all supported agents (DeepSeek Harness, Claude Code, " +
+                "Cursor, Windsurf, Cline). This is equivalent to running the following commands manually:\n" +
                 $"  pip install \"{PipInstallSource}\"\n" +
                 $"  {PipPackage} install-skill",
                 MessageType.Info);

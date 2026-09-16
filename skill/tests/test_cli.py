@@ -44,6 +44,8 @@ from agents_unity_bridge.cli import (
     get_skill_source_dir,
     get_skill_target_dir,
     get_dsh_skills_dir,
+    resolve_agents,
+    AGENT_TARGETS,
     load_build_config,
     _validate_command_id,
     resolve_project_root,
@@ -2218,35 +2220,25 @@ class TestSkillManagement:
 
     def test_install_skill_creates_symlink(self, tmp_path, capsys):
         """install_skill should create a symlink or copy to the skill directory"""
-        skills_dir = tmp_path / "skills"
+        home = tmp_path / "home"
+        target_dir = home / ".dsh" / "skills" / "unity-bridge"
 
-        with patch.object(Path, "home", return_value=tmp_path / "home"):
-            # Create mock home directory structure
-            (tmp_path / "home" / ".dsh").mkdir(parents=True)
-
-            # Patch get_dsh_skills_dir to use our temp dir
-            with patch(
-                "agents_unity_bridge.cli.get_dsh_skills_dir",
-                return_value=skills_dir,
-            ):
-                with patch(
-                    "agents_unity_bridge.cli.get_skill_target_dir",
-                    return_value=skills_dir / "unity-bridge",
-                ):
-                    result = install_skill(verbose=False)
+        with patch.object(Path, "home", return_value=home):
+            result = install_skill(agents="dsh", verbose=False)
 
         assert result == EXIT_SUCCESS
-        assert (skills_dir / "unity-bridge").exists()
+        assert target_dir.exists()
         # On Windows without Developer Mode, may be a copy instead of symlink
         # Either is acceptable
-        assert (skills_dir / "unity-bridge").is_dir()
+        assert target_dir.is_dir()
 
         captured = capsys.readouterr()
         assert "Skill installed" in captured.out
 
     def test_install_skill_replaces_existing_symlink(self, tmp_path, capsys):
         """install_skill should replace an existing symlink or directory"""
-        skills_dir = tmp_path / "skills"
+        home = tmp_path / "home"
+        skills_dir = home / ".dsh" / "skills"
         skills_dir.mkdir(parents=True)
 
         # Create an old installation (try symlink, fall back to directory)
@@ -2266,15 +2258,8 @@ class TestSkillManagement:
             shutil.copytree(old_target, target_path)
             created_symlink = False
 
-        with patch(
-            "agents_unity_bridge.cli.get_dsh_skills_dir",
-            return_value=skills_dir,
-        ):
-            with patch(
-                "agents_unity_bridge.cli.get_skill_target_dir",
-                return_value=target_path,
-            ):
-                result = install_skill(verbose=True)
+        with patch.object(Path, "home", return_value=home):
+            result = install_skill(agents="dsh", verbose=True)
 
         assert result == EXIT_SUCCESS
         assert target_path.exists()
@@ -2285,28 +2270,22 @@ class TestSkillManagement:
 
         captured = capsys.readouterr()
         if created_symlink:
-            assert "Removing existing symlink" in captured.err
+            assert "Created symlink" in captured.err
         else:
-            assert "Removing existing directory" in captured.err
+            assert "Copied skill files" in captured.err
 
     def test_install_skill_removes_existing_directory(self, tmp_path, capsys):
         """install_skill should remove and replace an existing directory"""
-        skills_dir = tmp_path / "skills"
+        home = tmp_path / "home"
+        skills_dir = home / ".dsh" / "skills"
         skill_dir = skills_dir / "unity-bridge"
         skill_dir.mkdir(parents=True)
 
         # Put a file in it so it's not empty
         (skill_dir / "some_file.txt").write_text("test")
 
-        with patch(
-            "agents_unity_bridge.cli.get_dsh_skills_dir",
-            return_value=skills_dir,
-        ):
-            with patch(
-                "agents_unity_bridge.cli.get_skill_target_dir",
-                return_value=skill_dir,
-            ):
-                result = install_skill(verbose=True)
+        with patch.object(Path, "home", return_value=home):
+            result = install_skill(agents="dsh", verbose=True)
 
         assert result == EXIT_SUCCESS
         # Old file should be gone
@@ -2315,7 +2294,7 @@ class TestSkillManagement:
         assert (skill_dir / "SKILL.md").exists()
 
         captured = capsys.readouterr()
-        assert "Removing existing directory" in captured.err
+        assert "Skill installed" in captured.out
 
     def test_install_skill_fails_when_source_missing(self, tmp_path, capsys):
         """install_skill should fail when skill source directory is missing"""
@@ -2332,7 +2311,8 @@ class TestSkillManagement:
 
     def test_uninstall_skill_removes_symlink(self, tmp_path, capsys):
         """uninstall_skill should remove the symlink or copied directory"""
-        skills_dir = tmp_path / "skills"
+        home = tmp_path / "home"
+        skills_dir = home / ".dsh" / "skills"
         skills_dir.mkdir(parents=True)
 
         # Try to create a symlink, fall back to copying if not possible
@@ -2343,128 +2323,81 @@ class TestSkillManagement:
 
         try:
             install_path.symlink_to(target)
-            is_symlink = True
         except OSError:
             # Can't create symlink, use copy instead
             import shutil
 
             shutil.copytree(target, install_path)
-            is_symlink = False
 
-        with patch(
-            "agents_unity_bridge.cli.get_skill_target_dir",
-            return_value=install_path,
-        ):
-            result = uninstall_skill(verbose=False)
+        with patch.object(Path, "home", return_value=home):
+            result = uninstall_skill(agents="dsh", verbose=False)
 
         assert result == EXIT_SUCCESS
         assert not install_path.exists()
 
         captured = capsys.readouterr()
-        assert "Skill uninstalled" in captured.out
-        if is_symlink:
-            assert "symlink" in captured.out
-        else:
-            assert "directory" in captured.out
+        assert "uninstalled" in captured.out
 
     def test_uninstall_skill_idempotent(self, tmp_path, capsys):
         """uninstall_skill should succeed even when skill is not installed"""
-        skills_dir = tmp_path / "skills"
-        skills_dir.mkdir(parents=True)
-        symlink = skills_dir / "unity-bridge"
+        home = tmp_path / "home"
 
-        with patch(
-            "agents_unity_bridge.cli.get_skill_target_dir",
-            return_value=symlink,
-        ):
-            result = uninstall_skill(verbose=False)
+        with patch.object(Path, "home", return_value=home):
+            result = uninstall_skill(agents="dsh", verbose=False)
 
         assert result == EXIT_SUCCESS
 
         captured = capsys.readouterr()
-        assert "not installed" in captured.out
+        assert "uninstalled" not in captured.out
 
     def test_uninstall_skill_removes_skill_directory(self, tmp_path, capsys):
         """uninstall_skill should remove a directory that contains SKILL.md"""
-        skills_dir = tmp_path / "skills"
+        home = tmp_path / "home"
+        skills_dir = home / ".dsh" / "skills"
         skill_dir = skills_dir / "unity-bridge"
         skill_dir.mkdir(parents=True)
         # Add SKILL.md to make it look like a valid skill installation
         (skill_dir / "SKILL.md").write_text("# Skill")
 
-        with patch(
-            "agents_unity_bridge.cli.get_skill_target_dir",
-            return_value=skill_dir,
-        ):
-            result = uninstall_skill(verbose=False)
+        with patch.object(Path, "home", return_value=home):
+            result = uninstall_skill(agents="dsh", verbose=False)
 
         assert result == EXIT_SUCCESS
         assert not skill_dir.exists()
 
         captured = capsys.readouterr()
-        assert "Skill uninstalled: removed directory" in captured.out
+        assert "uninstalled" in captured.out
 
     def test_main_install_skill(self, tmp_path, capsys):
         """Test install-skill command via main()"""
-        skills_dir = tmp_path / "skills"
+        home = tmp_path / "home"
 
         with patch("sys.argv", ["agents-unity-bridge", "install-skill"]):
-            with patch(
-                "agents_unity_bridge.cli.get_dsh_skills_dir",
-                return_value=skills_dir,
-            ):
-                with patch(
-                    "agents_unity_bridge.cli.get_skill_target_dir",
-                    return_value=skills_dir / "unity-bridge",
-                ):
-                    exit_code = main()
+            with patch.object(Path, "home", return_value=home):
+                exit_code = main()
 
         assert exit_code == EXIT_SUCCESS
 
     def test_main_uninstall_skill(self, tmp_path, capsys):
         """Test uninstall-skill command via main()"""
-        skills_dir = tmp_path / "skills"
-        skills_dir.mkdir(parents=True)
-
-        # Create an installation to uninstall (try symlink, fall back to copy)
-        target = tmp_path / "skill_target"
-        target.mkdir()
-        (target / "SKILL.md").write_text("# Skill")
-        install_path = skills_dir / "unity-bridge"
-
-        try:
-            install_path.symlink_to(target)
-        except OSError:
-            # Can't create symlink, use copy instead
-            import shutil
-
-            shutil.copytree(target, install_path)
+        home = tmp_path / "home"
 
         with patch("sys.argv", ["agents-unity-bridge", "uninstall-skill"]):
-            with patch(
-                "agents_unity_bridge.cli.get_skill_target_dir",
-                return_value=install_path,
-            ):
+            with patch.object(Path, "home", return_value=home):
                 exit_code = main()
 
         assert exit_code == EXIT_SUCCESS
 
     def test_install_skill_removes_regular_file(self, tmp_path, capsys):
         """install_skill should remove and replace a regular file"""
-        skills_dir = tmp_path / "skills"
+        home = tmp_path / "home"
+        skills_dir = home / ".dsh" / "skills"
         skills_dir.mkdir(parents=True)
         target_file = skills_dir / "unity-bridge"
         target_file.write_text("not a symlink or directory")
 
-        with patch(
-            "agents_unity_bridge.cli.get_dsh_skills_dir",
-            return_value=skills_dir,
-        ):
-            with patch(
-                "agents_unity_bridge.cli.get_skill_target_dir",
-                return_value=target_file,
-            ):
-                result = install_skill(verbose=True)
+        with patch.object(Path, "home", return_value=home):
+            result = install_skill(agents="dsh", verbose=True)
 
         assert result == EXIT_SUCCESS
         # Should now be a directory (or symlink), not a file
@@ -2473,24 +2406,17 @@ class TestSkillManagement:
         assert (target_file / "SKILL.md").exists()
 
         captured = capsys.readouterr()
-        assert "Removing existing file" in captured.err
+        assert "Skill installed" in captured.out
 
     def test_update_package_success(self, tmp_path, capsys):
         """update_package should upgrade pip package and reinstall skill"""
-        skills_dir = tmp_path / "skills"
+        home = tmp_path / "home"
 
         mock_result = type("Result", (), {"returncode": 0, "stderr": ""})()
 
         with patch("subprocess.run", return_value=mock_result):
-            with patch(
-                "agents_unity_bridge.cli.get_dsh_skills_dir",
-                return_value=skills_dir,
-            ):
-                with patch(
-                    "agents_unity_bridge.cli.get_skill_target_dir",
-                    return_value=skills_dir / "unity-bridge",
-                ):
-                    result = update_package(verbose=False)
+            with patch.object(Path, "home", return_value=home):
+                result = update_package(verbose=False)
 
         assert result == EXIT_SUCCESS
 
@@ -2521,26 +2447,20 @@ class TestSkillManagement:
 
     def test_main_update(self, tmp_path, capsys):
         """Test update command via main()"""
-        skills_dir = tmp_path / "skills"
+        home = tmp_path / "home"
         mock_result = type("Result", (), {"returncode": 0, "stderr": ""})()
 
         with patch("sys.argv", ["agents-unity-bridge", "update"]):
             with patch("subprocess.run", return_value=mock_result):
-                with patch(
-                    "agents_unity_bridge.cli.get_dsh_skills_dir",
-                    return_value=skills_dir,
-                ):
-                    with patch(
-                        "agents_unity_bridge.cli.get_skill_target_dir",
-                        return_value=skills_dir / "unity-bridge",
-                    ):
-                        exit_code = main()
+                with patch.object(Path, "home", return_value=home):
+                    exit_code = main()
 
         assert exit_code == EXIT_SUCCESS
 
     def test_install_skill_copy_fallback_on_symlink_failure(self, tmp_path, capsys):
         """install_skill should fall back to copying when symlink creation fails"""
-        skills_dir = tmp_path / "skills"
+        home = tmp_path / "home"
+        skills_dir = home / ".dsh" / "skills"
         skills_dir.mkdir(parents=True)
         target_dir = skills_dir / "unity-bridge"
 
@@ -2548,15 +2468,8 @@ class TestSkillManagement:
             raise OSError("[WinError 1314] A required privilege is not held by the client")
 
         with patch.object(Path, "symlink_to", mock_symlink_to):
-            with patch(
-                "agents_unity_bridge.cli.get_dsh_skills_dir",
-                return_value=skills_dir,
-            ):
-                with patch(
-                    "agents_unity_bridge.cli.get_skill_target_dir",
-                    return_value=target_dir,
-                ):
-                    result = install_skill(verbose=True)
+            with patch.object(Path, "home", return_value=home):
+                result = install_skill(agents="dsh", verbose=True)
 
         assert result == EXIT_SUCCESS
         assert target_dir.exists()
@@ -2565,14 +2478,13 @@ class TestSkillManagement:
         assert (target_dir / "SKILL.md").exists()
 
         captured = capsys.readouterr()
-        assert "Symlink creation failed" in captured.err
-        assert "Falling back to directory copy" in captured.err
-        assert "Skill installed (copy)" in captured.out
-        assert "Using directory copy instead of symlink" in captured.out
+        assert "Copied skill files" in captured.err
+        assert "Skill installed" in captured.out
 
     def test_install_skill_copy_fallback_failure(self, tmp_path, capsys):
         """install_skill should fail gracefully when both symlink and copy fail"""
-        skills_dir = tmp_path / "skills"
+        home = tmp_path / "home"
+        skills_dir = home / ".dsh" / "skills"
         skills_dir.mkdir(parents=True)
         target_dir = skills_dir / "unity-bridge"
 
@@ -2581,24 +2493,18 @@ class TestSkillManagement:
 
         with patch.object(Path, "symlink_to", mock_symlink_to):
             with patch("shutil.copytree", side_effect=PermissionError("Permission denied")):
-                with patch(
-                    "agents_unity_bridge.cli.get_dsh_skills_dir",
-                    return_value=skills_dir,
-                ):
-                    with patch(
-                        "agents_unity_bridge.cli.get_skill_target_dir",
-                        return_value=target_dir,
-                    ):
-                        result = install_skill(verbose=False)
+                with patch.object(Path, "home", return_value=home):
+                    result = install_skill(agents="dsh", verbose=False)
 
         assert result == EXIT_ERROR
 
         captured = capsys.readouterr()
-        assert "Could not create symlink or copy directory" in captured.err
+        assert "Could not symlink or copy" in captured.err
 
     def test_install_skill_replaces_existing_directory(self, tmp_path, capsys):
         """install_skill should replace an existing copied directory"""
-        skills_dir = tmp_path / "skills"
+        home = tmp_path / "home"
+        skills_dir = home / ".dsh" / "skills"
         skills_dir.mkdir(parents=True)
         target_dir = skills_dir / "unity-bridge"
 
@@ -2606,15 +2512,8 @@ class TestSkillManagement:
         target_dir.mkdir()
         (target_dir / "old_file.txt").write_text("old")
 
-        with patch(
-            "agents_unity_bridge.cli.get_dsh_skills_dir",
-            return_value=skills_dir,
-        ):
-            with patch(
-                "agents_unity_bridge.cli.get_skill_target_dir",
-                return_value=target_dir,
-            ):
-                result = install_skill(verbose=True)
+        with patch.object(Path, "home", return_value=home):
+            result = install_skill(agents="dsh", verbose=True)
 
         assert result == EXIT_SUCCESS
         assert target_dir.exists()
@@ -2624,11 +2523,12 @@ class TestSkillManagement:
         assert (target_dir / "SKILL.md").exists()
 
         captured = capsys.readouterr()
-        assert "Removing existing directory" in captured.err
+        assert "Skill installed" in captured.out
 
     def test_uninstall_skill_removes_copied_directory(self, tmp_path, capsys):
         """uninstall_skill should remove a copied skill directory"""
-        skills_dir = tmp_path / "skills"
+        home = tmp_path / "home"
+        skills_dir = home / ".dsh" / "skills"
         skills_dir.mkdir(parents=True)
         target_dir = skills_dir / "unity-bridge"
 
@@ -2637,21 +2537,19 @@ class TestSkillManagement:
         (target_dir / "SKILL.md").write_text("# Skill")
         (target_dir / "scripts").mkdir()
 
-        with patch(
-            "agents_unity_bridge.cli.get_skill_target_dir",
-            return_value=target_dir,
-        ):
-            result = uninstall_skill(verbose=False)
+        with patch.object(Path, "home", return_value=home):
+            result = uninstall_skill(agents="dsh", verbose=False)
 
         assert result == EXIT_SUCCESS
         assert not target_dir.exists()
 
         captured = capsys.readouterr()
-        assert "Skill uninstalled: removed directory" in captured.out
+        assert "uninstalled" in captured.out
 
     def test_uninstall_skill_warns_on_non_skill_directory(self, tmp_path, capsys):
         """uninstall_skill should warn when directory doesn't look like a skill"""
-        skills_dir = tmp_path / "skills"
+        home = tmp_path / "home"
+        skills_dir = home / ".dsh" / "skills"
         skills_dir.mkdir(parents=True)
         target_dir = skills_dir / "unity-bridge"
 
@@ -2659,16 +2557,67 @@ class TestSkillManagement:
         target_dir.mkdir()
         (target_dir / "random_file.txt").write_text("not a skill")
 
-        with patch(
-            "agents_unity_bridge.cli.get_skill_target_dir",
-            return_value=target_dir,
-        ):
-            result = uninstall_skill(verbose=False)
+        with patch.object(Path, "home", return_value=home):
+            result = uninstall_skill(agents="dsh", verbose=False)
 
         assert result == EXIT_ERROR
 
         captured = capsys.readouterr()
         assert "doesn't appear to be a skill installation" in captured.err
+
+    def test_resolve_agents_all(self):
+        """resolve_agents('all') should return every configured agent target"""
+        targets = resolve_agents("all")
+        keys = [key for key, _ in targets]
+        assert keys == list(AGENT_TARGETS.keys())
+        assert len(targets) == len(AGENT_TARGETS)
+
+    def test_resolve_agents_specific(self):
+        """resolve_agents should map a comma-separated list to targets"""
+        targets = resolve_agents("dsh,cursor")
+        keys = [key for key, _ in targets]
+        assert keys == ["dsh", "cursor"]
+
+    def test_resolve_agents_unknown(self, capsys):
+        """resolve_agents should warn about and skip unknown keys"""
+        targets = resolve_agents("dsh,does-not-exist")
+        keys = [key for key, _ in targets]
+        assert keys == ["dsh"]
+
+        captured = capsys.readouterr()
+        assert "unknown agent 'does-not-exist'" in captured.err
+
+    def test_install_skill_rules_target(self, tmp_path, capsys):
+        """install_skill should write a rules file for rules-kind agents"""
+        home = tmp_path / "home"
+        cursor_rules = home / ".cursor" / "rules" / "unity-bridge.mdc"
+
+        with patch.object(Path, "home", return_value=home):
+            result = install_skill(agents="cursor", verbose=False)
+
+        assert result == EXIT_SUCCESS
+        assert cursor_rules.exists()
+        assert cursor_rules.is_file()
+        assert "agents-unity-bridge" in cursor_rules.read_text(encoding="utf-8")
+
+        captured = capsys.readouterr()
+        assert "Cursor" in captured.out
+
+    def test_uninstall_skill_rules_target(self, tmp_path, capsys):
+        """uninstall_skill should remove a rules file for rules-kind agents"""
+        home = tmp_path / "home"
+        cursor_rules = home / ".cursor" / "rules" / "unity-bridge.mdc"
+        cursor_rules.parent.mkdir(parents=True)
+        cursor_rules.write_text("agents-unity-bridge", encoding="utf-8")
+
+        with patch.object(Path, "home", return_value=home):
+            result = uninstall_skill(agents="cursor", verbose=False)
+
+        assert result == EXIT_SUCCESS
+        assert not cursor_rules.exists()
+
+        captured = capsys.readouterr()
+        assert "uninstalled" in captured.out
 
 
 class TestUUIDValidation:

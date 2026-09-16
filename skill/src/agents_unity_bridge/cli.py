@@ -12,7 +12,6 @@ import argparse
 import json
 import os
 import re
-import platform
 import shutil
 import subprocess
 import sys
@@ -1013,9 +1012,120 @@ def get_skill_target_dir() -> Path:
     return get_dsh_skills_dir() / "unity-bridge"
 
 
-def install_skill(verbose: bool = False) -> int:
+# ---------------------------------------------------------------------------
+# Multi-agent skill installation
+#
+# Each entry describes where the "skill" lives for a given agent, and how it is
+# installed there:
+#   - kind == "skill": copy/symlink the bundled SKILL.md directory (Claude Code
+#     and DeepSeek Harness both use a SKILL.md + frontmatter skill format).
+#   - kind == "rules": write a single rule/instruction file that tells the agent
+#     how to drive Unity through `agents-unity-bridge` (Cursor/Windsurf/Cline
+#     use persistent "rules" rather than skills).
+# ---------------------------------------------------------------------------
+AGENT_TARGETS = {
+    "dsh": {"name": "DeepSeek Harness", "kind": "skill", "path": ".dsh/skills/unity-bridge"},
+    "claude": {"name": "Claude Code", "kind": "skill", "path": ".claude/skills/unity-bridge"},
+    "cursor": {"name": "Cursor", "kind": "rules", "path": ".cursor/rules/unity-bridge.mdc"},
+    "windsurf": {"name": "Windsurf", "kind": "rules", "path": ".windsurf/rules/unity-bridge.md"},
+    "cline": {"name": "Cline", "kind": "rules", "path": ".cline/rules/unity-bridge.md"},
+}
+
+AGENT_RULES_TEMPLATE = """---
+description: agents-unity-bridge —— 通过文件协议桥接 Unity Editor
+---
+
+# agents-unity-bridge
+
+本环境已安装 `agents-unity-bridge`，一个通过文件协议桥接 Unity Editor 的 CLI 工具。
+
+## 常用命令
+
+- `agents-unity-bridge get-status` —— 查看 Unity 编辑器状态
+- `agents-unity-bridge compile` —— 触发脚本编译
+- `agents-unity-bridge run-tests --mode EditMode` —— 运行 EditMode 测试
+- `agents-unity-bridge get-console-logs --filter Error` —— 查看错误日志
+- `agents-unity-bridge refresh` —— 刷新资源数据库
+- `agents-unity-bridge build --target Android` —— 构建
+- `agents-unity-bridge get-dependencies --asset <path>` —— 资源依赖分析
+
+运行 `agents-unity-bridge --help` 查看全部命令。
+
+## 规则
+
+- 修改 Unity 脚本后，用 `agents-unity-bridge compile` 验证编译。
+- 排查报错时，用 `agents-unity-bridge get-console-logs --filter Error`。
+- 构建类命令默认超时 300s，其它命令 30s，必要时加 `--timeout`。
+"""
+
+
+def resolve_agents(agents: str) -> list:
+    """Resolve an `agents` selector (``"all"`` or comma-separated keys) to a
+    list of ``(key, target)`` tuples. Unknown keys are warned about and skipped."""
+    if not agents or agents.strip().lower() == "all":
+        keys = list(AGENT_TARGETS.keys())
+    else:
+        keys = [k.strip().lower() for k in agents.split(",") if k.strip()]
+
+    result = []
+    for key in keys:
+        if key in AGENT_TARGETS:
+            result.append((key, AGENT_TARGETS[key]))
+        else:
+            print(f"Warning: unknown agent '{key}', skipped", file=sys.stderr)
+    return result
+
+
+def _install_skill_dir(source_dir: Path, target_dir: Path, verbose: bool) -> bool:
+    """Install a skill directory into `target_dir` via symlink (copy fallback)."""
+    if target_dir.exists() or target_dir.is_symlink():
+        try:
+            if target_dir.is_symlink() or target_dir.is_file():
+                target_dir.unlink()
+            else:
+                shutil.rmtree(target_dir)
+        except Exception as e:
+            print(f"Error: Could not remove existing {target_dir}: {e}", file=sys.stderr)
+            return False
+
+    target_dir.parent.mkdir(parents=True, exist_ok=True)
+    try:
+        target_dir.symlink_to(source_dir)
+        if verbose:
+            print(f"Created symlink: {target_dir} -> {source_dir}", file=sys.stderr)
+        return True
+    except (OSError, NotImplementedError):
+        try:
+            shutil.copytree(source_dir, target_dir)
+            if verbose:
+                print(f"Copied skill files to: {target_dir}", file=sys.stderr)
+            return True
+        except Exception as e:
+            print(f"Error: Could not symlink or copy to {target_dir}: {e}", file=sys.stderr)
+            return False
+
+
+def _install_rules_file(target_dir: Path, verbose: bool) -> bool:
+    """Write the rules/instruction file for rules-based agents."""
+    try:
+        target_dir.parent.mkdir(parents=True, exist_ok=True)
+        target_dir.write_text(AGENT_RULES_TEMPLATE, encoding="utf-8")
+        if verbose:
+            print(f"Wrote rules file: {target_dir}", file=sys.stderr)
+        return True
+    except Exception as e:
+        print(f"Error: Could not write rules file {target_dir}: {e}", file=sys.stderr)
+        return False
+
+
+def install_skill(agents: str = "all", verbose: bool = False) -> int:
     """
-    Install the DeepSeek Harness skill by creating a symlink (with copy fallback on Windows).
+    Install the skill/rules for one or more AI agents.
+
+    Args:
+        agents: "all" or a comma-separated list of agent keys
+                (dsh, claude, cursor, windsurf, cline).
+        verbose: Print progress messages.
 
     Returns:
         Exit code (0 for success, 1 for error).
@@ -1033,161 +1143,91 @@ def install_skill(verbose: bool = False) -> int:
     if verbose:
         print(f"Skill source: {source_dir}", file=sys.stderr)
 
-    # Verify SKILL.md exists
+    # Verify SKILL.md exists (required for skill-kind targets)
     skill_md = source_dir / "SKILL.md"
     if not skill_md.exists():
         print(f"Error: SKILL.md not found at {skill_md}", file=sys.stderr)
         return EXIT_ERROR
 
-    # Create skills directory if it doesn't exist
-    skills_dir = get_dsh_skills_dir()
-    try:
-        skills_dir.mkdir(parents=True, exist_ok=True)
-    except Exception as e:
-        print(f"Error: Could not create skills directory: {e}", file=sys.stderr)
+    targets = resolve_agents(agents)
+    if not targets:
+        print(f"Error: no valid agent targets for '{agents}'.", file=sys.stderr)
+        print(f"Valid agents: {', '.join(AGENT_TARGETS.keys())}", file=sys.stderr)
         return EXIT_ERROR
 
-    target_dir = get_skill_target_dir()
-
-    # Remove existing installation
-    if target_dir.exists() or target_dir.is_symlink():
-        if target_dir.is_symlink():
-            if verbose:
-                print(f"Removing existing symlink: {target_dir}", file=sys.stderr)
-            try:
-                target_dir.unlink()
-            except Exception as e:
-                print(f"Error: Could not remove existing symlink: {e}", file=sys.stderr)
-                return EXIT_ERROR
-        elif target_dir.is_dir():
-            if verbose:
-                print(f"Removing existing directory: {target_dir}", file=sys.stderr)
-            try:
-                shutil.rmtree(target_dir)
-            except Exception as e:
-                print(f"Error: Could not remove existing directory: {e}", file=sys.stderr)
-                return EXIT_ERROR
+    failed = 0
+    for key, target in targets:
+        target_dir = Path.home() / target["path"]
+        if target["kind"] == "skill":
+            ok = _install_skill_dir(source_dir, target_dir, verbose)
         else:
-            # Regular file
-            if verbose:
-                print(f"Removing existing file: {target_dir}", file=sys.stderr)
-            try:
-                target_dir.unlink()
-            except Exception as e:
-                print(f"Error: Could not remove existing file: {e}", file=sys.stderr)
-                return EXIT_ERROR
+            ok = _install_rules_file(target_dir, verbose)
 
-    # Try to create symlink first
-    used_copy_fallback = False
-    try:
-        target_dir.symlink_to(source_dir)
-        if verbose:
-            print(f"Created symlink: {target_dir} -> {source_dir}", file=sys.stderr)
-    except (OSError, NotImplementedError) as e:
-        # Symlink creation failed (likely Windows permissions or unsupported filesystem)
-        # Fall back to directory copy
-        if verbose:
-            print(f"Symlink creation failed: {e}", file=sys.stderr)
-            print("Falling back to directory copy...", file=sys.stderr)
-
-        try:
-            shutil.copytree(source_dir, target_dir)
-            used_copy_fallback = True
-            if verbose:
-                print(f"Copied skill files to: {target_dir}", file=sys.stderr)
-        except Exception as copy_error:
-            print(
-                f"Error: Could not create symlink or copy directory: {copy_error}",
-                file=sys.stderr,
-            )
-            if platform.system() == "Windows":
-                print()
-                print("On Windows, symlinks require either:", file=sys.stderr)
-                print("  - Administrator privileges, or", file=sys.stderr)
-                print(
-                    "  - Developer Mode enabled (Settings > Update & Security > For developers)",
-                    file=sys.stderr,
-                )
-            return EXIT_ERROR
-
-    # Success message
-    if used_copy_fallback:
-        print(f"✓ Skill installed (copy): {target_dir}")
-        print()
-        print("Note: Using directory copy instead of symlink.")
-        print("To update the skill, re-run: python -m agents_unity_bridge.cli install-skill")
-        if platform.system() == "Windows":
-            print()
-            print("To enable symlinks (optional), enable Developer Mode:")
-            print("  Settings > Update & Security > For developers > Developer Mode")
-    else:
-        print(f"✓ Skill installed (symlink): {target_dir} -> {source_dir}")
+        if ok:
+            print(f"✓ {target['name']} ({key}): {target_dir}")
+        else:
+            failed += 1
 
     print()
-    print("The DeepSeek Harness skill is now available.")
-    print("Restart DeepSeek Harness to load the skill, then ask DeepSeek Harness naturally:")
-    print('  "Run the Unity tests"')
-    print('  "Check for compilation errors"')
-    print()
-
-    return EXIT_SUCCESS
+    if failed == 0:
+        print(f"Skill installed for {len(targets)} agent(s).")
+        return EXIT_SUCCESS
+    print(f"{failed} agent(s) failed to install.", file=sys.stderr)
+    return EXIT_ERROR
 
 
-def uninstall_skill(verbose: bool = False) -> int:
+def uninstall_skill(agents: str = "all", verbose: bool = False) -> int:
     """
-    Uninstall the DeepSeek Harness skill by removing the symlink or copied directory.
+    Uninstall the skill/rules for one or more AI agents.
+
+    Args:
+        agents: "all" or a comma-separated list of agent keys.
+        verbose: Print progress messages.
 
     Returns:
         Exit code (0 for success, 1 for error).
     """
-    target_dir = get_skill_target_dir()
+    targets = resolve_agents(agents)
+    if not targets:
+        print(f"Error: no valid agent targets for '{agents}'.", file=sys.stderr)
+        return EXIT_ERROR
 
-    if not target_dir.exists() and not target_dir.is_symlink():
-        print("Skill is not installed.")
-        return EXIT_SUCCESS
+    removed = 0
+    failed = 0
+    for key, target in targets:
+        target_dir = Path.home() / target["path"]
+        if not target_dir.exists() and not target_dir.is_symlink():
+            if verbose:
+                print(f"({key}) not installed: {target_dir}", file=sys.stderr)
+            continue
 
-    if target_dir.is_symlink():
-        try:
-            target_dir.unlink()
-            print(f"✓ Skill uninstalled: removed symlink {target_dir}")
-            return EXIT_SUCCESS
-        except Exception as e:
-            print(f"Error: Could not remove symlink: {e}", file=sys.stderr)
-            return EXIT_ERROR
-    elif target_dir.is_dir():
-        # Check if this is a copied skill directory (contains SKILL.md)
-        if (target_dir / "SKILL.md").exists():
-            try:
-                shutil.rmtree(target_dir)
-                print(f"✓ Skill uninstalled: removed directory {target_dir}")
-                return EXIT_SUCCESS
-            except Exception as e:
-                print(f"Error: Could not remove directory: {e}", file=sys.stderr)
-                return EXIT_ERROR
-        else:
-            # Directory exists but doesn't look like our skill
+        # Safety check: refuse to delete a real directory (not a symlink) for a
+        # skill-kind target unless it actually looks like a skill installation.
+        if (
+            target["kind"] == "skill"
+            and target_dir.is_dir()
+            and not target_dir.is_symlink()
+            and not (target_dir / "SKILL.md").exists()
+        ):
             print(
-                f"Warning: {target_dir} exists but doesn't appear to be a skill installation.",
+                f"Warning: {target_dir} doesn't appear to be a skill installation, skipping",
                 file=sys.stderr,
             )
-            print("Remove it manually if desired:", file=sys.stderr)
-            if platform.system() == "Windows":
-                print(f"  rmdir /s {target_dir}", file=sys.stderr)
+            failed += 1
+            continue
+
+        try:
+            if target_dir.is_symlink() or target_dir.is_file():
+                target_dir.unlink()
             else:
-                print(f"  rm -rf {target_dir}", file=sys.stderr)
-            return EXIT_ERROR
-    else:
-        # Regular file
-        print(
-            f"Warning: {target_dir} exists but is not a symlink or directory.",
-            file=sys.stderr,
-        )
-        print("Remove it manually if desired:", file=sys.stderr)
-        if platform.system() == "Windows":
-            print(f"  del {target_dir}", file=sys.stderr)
-        else:
-            print(f"  rm {target_dir}", file=sys.stderr)
-        return EXIT_ERROR
+                shutil.rmtree(target_dir)
+            print(f"✓ {target['name']} ({key}) uninstalled: {target_dir}")
+            removed += 1
+        except Exception as e:
+            failed += 1
+            print(f"Error: Could not remove {target_dir}: {e}", file=sys.stderr)
+
+    return EXIT_SUCCESS if failed == 0 else EXIT_ERROR
 
 
 def update_package(verbose: bool = False) -> int:
@@ -1229,7 +1269,7 @@ def update_package(verbose: bool = False) -> int:
 
     # Reinstall skill to ensure symlink points to updated package
     print("Reinstalling skill...")
-    return install_skill(verbose)
+    return install_skill("all", verbose)
 
 
 def execute_health_check(timeout: int, verbose: bool) -> int:
@@ -1298,8 +1338,8 @@ Unity Commands:
   health-check       Verify Unity Bridge setup
 
 Skill Commands:
-  install-skill      Install DeepSeek Harness skill
-  uninstall-skill    Uninstall DeepSeek Harness skill
+  install-skill      Install the skill for AI agents (dsh/claude/cursor/windsurf/cline)
+  uninstall-skill    Uninstall the skill for AI agents
   update             Update package and reinstall skill
 
 Examples:
@@ -1487,6 +1527,11 @@ Examples:
     )
     parser.add_argument("--verbose", action="store_true", help="Print verbose progress messages")
     parser.add_argument(
+        "--agents",
+        default="all",
+        help="Agents to install the skill for (comma-separated: dsh,claude,cursor,windsurf,cline; or 'all'). Default: all",
+    )
+    parser.add_argument(
         "--project",
         help="Unity project root directory (default: auto-detect from cwd or UNITY_BRIDGE_PROJECT env)",
     )
@@ -1501,10 +1546,10 @@ Examples:
 
     # Handle skill management commands first (they don't need timeout validation)
     if args.command == "install-skill":
-        return install_skill(args.verbose)
+        return install_skill(args.agents, args.verbose)
 
     if args.command == "uninstall-skill":
-        return uninstall_skill(args.verbose)
+        return uninstall_skill(args.agents, args.verbose)
 
     if args.command == "update":
         return update_package(args.verbose)
