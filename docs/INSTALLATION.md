@@ -29,7 +29,7 @@ If `agents-unity-bridge` is not on your PATH, you can use the module directly:
 python -m agents_unity_bridge.cli --help
 ```
 
-### 2. Install the Skill (optional, for DeepSeek Harness)
+### 2. Install the Skill (for supported AI agents)
 
 ```bash
 agents-unity-bridge install-skill
@@ -84,17 +84,31 @@ Add this line to your project's `Packages/manifest.json`:
 ### Skill Management
 
 ```bash
-# Install the DeepSeek Harness skill
+# Install the skill/rules for all supported agents
 agents-unity-bridge install-skill
 
-# Uninstall the DeepSeek Harness skill
+# Install for a specific agent only
+agents-unity-bridge install-skill --agents codex
+
+# Uninstall for all agents
 agents-unity-bridge uninstall-skill
 
 # Update package and reinstall skill
 agents-unity-bridge update
 ```
 
-The skill is installed to `~/.dsh/skills/unity-bridge/`:
+`install-skill` (default `--agents all`) targets:
+
+| Agent | Kind | Install location |
+|---|---|---|
+| DeepSeek Harness (`dsh`) | skill dir | `~/.dsh/skills/unity-bridge/` |
+| Claude Code (`claude`) | skill dir | `~/.claude/skills/unity-bridge/` |
+| Cursor (`cursor`) | rules file | `~/.cursor/rules/unity-bridge.mdc` |
+| Windsurf (`windsurf`) | rules file | `~/.windsurf/rules/unity-bridge.md` |
+| Cline (`cline`) | rules file | `~/.cline/rules/unity-bridge.md` |
+| OpenAI Codex (`codex`) | rules file | `~/.codex/AGENTS.md` |
+
+For skill-kind targets (`dsh`, `claude`):
 - **macOS/Linux/Windows with Developer Mode:** Installed as a symlink pointing to the bundled skill files in the pip package (updates automatically with package)
 - **Windows without Developer Mode:** Installed as a directory copy (requires re-running `agents-unity-bridge install-skill` after updates)
 

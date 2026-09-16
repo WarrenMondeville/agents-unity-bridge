@@ -2619,6 +2619,38 @@ class TestSkillManagement:
         captured = capsys.readouterr()
         assert "uninstalled" in captured.out
 
+    def test_install_skill_codex_target(self, tmp_path, capsys):
+        """install_skill should write Codex global instructions to ~/.codex/AGENTS.md"""
+        home = tmp_path / "home"
+        codex_agents_md = home / ".codex" / "AGENTS.md"
+
+        with patch.object(Path, "home", return_value=home):
+            result = install_skill(agents="codex", verbose=False)
+
+        assert result == EXIT_SUCCESS
+        assert codex_agents_md.exists()
+        assert codex_agents_md.is_file()
+        assert "agents-unity-bridge" in codex_agents_md.read_text(encoding="utf-8")
+
+        captured = capsys.readouterr()
+        assert "OpenAI Codex" in captured.out
+
+    def test_uninstall_skill_codex_target(self, tmp_path, capsys):
+        """uninstall_skill should remove Codex global instructions"""
+        home = tmp_path / "home"
+        codex_agents_md = home / ".codex" / "AGENTS.md"
+        codex_agents_md.parent.mkdir(parents=True)
+        codex_agents_md.write_text("agents-unity-bridge", encoding="utf-8")
+
+        with patch.object(Path, "home", return_value=home):
+            result = uninstall_skill(agents="codex", verbose=False)
+
+        assert result == EXIT_SUCCESS
+        assert not codex_agents_md.exists()
+
+        captured = capsys.readouterr()
+        assert "uninstalled" in captured.out
+
 
 class TestUUIDValidation:
     """Test UUID validation for command IDs"""

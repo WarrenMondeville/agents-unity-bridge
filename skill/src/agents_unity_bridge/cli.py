@@ -1029,6 +1029,7 @@ AGENT_TARGETS = {
     "cursor": {"name": "Cursor", "kind": "rules", "path": ".cursor/rules/unity-bridge.mdc"},
     "windsurf": {"name": "Windsurf", "kind": "rules", "path": ".windsurf/rules/unity-bridge.md"},
     "cline": {"name": "Cline", "kind": "rules", "path": ".cline/rules/unity-bridge.md"},
+    "codex": {"name": "OpenAI Codex", "kind": "rules", "path": ".codex/AGENTS.md"},
 }
 
 AGENT_RULES_TEMPLATE = """---
@@ -1124,7 +1125,7 @@ def install_skill(agents: str = "all", verbose: bool = False) -> int:
 
     Args:
         agents: "all" or a comma-separated list of agent keys
-                (dsh, claude, cursor, windsurf, cline).
+                (dsh, claude, cursor, windsurf, cline, codex).
         verbose: Print progress messages.
 
     Returns:
@@ -1338,7 +1339,7 @@ Unity Commands:
   health-check       Verify Unity Bridge setup
 
 Skill Commands:
-  install-skill      Install the skill for AI agents (dsh/claude/cursor/windsurf/cline)
+  install-skill      Install the skill for AI agents (dsh/claude/cursor/windsurf/cline/codex)
   uninstall-skill    Uninstall the skill for AI agents
   update             Update package and reinstall skill
 
@@ -1529,7 +1530,7 @@ Examples:
     parser.add_argument(
         "--agents",
         default="all",
-        help="Agents to install the skill for (comma-separated: dsh,claude,cursor,windsurf,cline; or 'all'). Default: all",
+        help="Agents to install the skill for (comma-separated: dsh,claude,cursor,windsurf,cline,codex; or 'all'). Default: all",
     )
     parser.add_argument(
         "--project",

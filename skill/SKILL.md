@@ -628,7 +628,7 @@ python3 --version
 # 2. Install the CLI (from GitHub)
 pip install "git+https://github.com/WarrenMondeville/agents-unity-bridge.git#subdirectory=skill"
 
-# 3. Install the DeepSeek Harness skill
+# 3. Install the skill/rules for your agent (all supported agents by default)
 agents-unity-bridge install-skill
 
 # 4. Verify the bridge is ready

@@ -10,9 +10,9 @@ namespace UnityBridge {
     /// <summary>
     /// Installs the companion Python CLI and the agent skill/rules from inside the
     /// Unity Editor. "Install Skill" supports mainstream AI agents (DeepSeek Harness,
-    /// Claude Code, Cursor, Windsurf, Cline). This mirrors how Unity MCP plugins
-    /// bootstrap their external tooling: install the Unity package first, then run the
-    /// installer from a menu / window.
+    /// Claude Code, Cursor, Windsurf, Cline, OpenAI Codex). This mirrors how Unity MCP
+    /// plugins bootstrap their external tooling: install the Unity package first, then
+    /// run the installer from a menu / window.
     /// </summary>
     public class AgentsBridgeInstaller : EditorWindow {
         private const string PipPackage = "agents-unity-bridge";
@@ -64,7 +64,7 @@ namespace UnityBridge {
             EditorGUILayout.HelpBox(
                 "Install the companion Python CLI and the agent skill/rules from inside Unity. " +
                 "\"Install Skill\" covers all supported agents (DeepSeek Harness, Claude Code, " +
-                "Cursor, Windsurf, Cline). This is equivalent to running the following commands manually:\n" +
+                "Cursor, Windsurf, Cline, OpenAI Codex). This is equivalent to running the following commands manually:\n" +
                 $"  pip install \"{PipInstallSource}\"\n" +
                 $"  {PipPackage} install-skill",
                 MessageType.Info);

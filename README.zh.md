@@ -121,11 +121,19 @@ AI 智能体 → agents-unity-bridge CLI → .agents-unity-bridge/command.json �
 
 ## 🎯 技能（Skill）说明
 
-DeepSeek Harness 通过名为 `unity-bridge` 的技能来“感知”如何操控 Unity。安装后：
+`install-skill` 会把桥接能力装到你正在使用的 AI 智能体里（默认 `--agents all`，也可用 `--agents <key>` 单独指定）：
 
-- 技能文件位于 `~/.dsh/skills/unity-bridge/SKILL.md`
-- 在工程目录中询问「运行测试」「检查编译错误」等，Harness 会自动加载该技能并调用 CLI
-- 手动安装 / 卸载技能：`agents-unity-bridge install-skill` / `agents-unity-bridge uninstall-skill`
+| 智能体 | 类型 | 安装位置 |
+|---|---|---|
+| DeepSeek Harness（`dsh`） | 技能目录 | `~/.dsh/skills/unity-bridge/SKILL.md` |
+| Claude Code（`claude`） | 技能目录 | `~/.claude/skills/unity-bridge/SKILL.md` |
+| Cursor（`cursor`） | 规则文件 | `~/.cursor/rules/unity-bridge.mdc` |
+| Windsurf（`windsurf`） | 规则文件 | `~/.windsurf/rules/unity-bridge.md` |
+| Cline（`cline`） | 规则文件 | `~/.cline/rules/unity-bridge.md` |
+| OpenAI Codex（`codex`） | 规则文件 | `~/.codex/AGENTS.md` |
+
+安装后在工程目录中询问「运行测试」「检查编译错误」等，智能体会自动加载该技能并调用 CLI。
+手动安装 / 卸载技能：`agents-unity-bridge install-skill` / `agents-unity-bridge uninstall-skill`。
 
 ## 📚 文档
 
